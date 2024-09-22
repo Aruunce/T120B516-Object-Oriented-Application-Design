@@ -29,6 +29,10 @@ public class Server extends Thread {
    
     private Protocol protocol;
     private boolean running=true;
+    
+    private int countdownTime = 30;
+    private boolean timerRunning = false;
+    
     public Server() throws SocketException 
     {
         clients=new ArrayList<ClientInfo>();
@@ -84,6 +88,9 @@ public class Server extends Thread {
                 
                 clients.add(new ClientInfo(writer,x,y,1));
                 
+                if (clients.size() == 2) {
+                    startTimer();
+                }
             }
             
             else if(sentence.startsWith("Update"))
@@ -150,6 +157,23 @@ public class Server extends Thread {
             ex.printStackTrace();
         }
     }
+    
+    public void startTimer() {
+        timerRunning = true;
+        
+        new Thread(() -> {
+            try {
+                while (countdownTime >= 0 && timerRunning) {
+                    BroadCastMessage("Time: " + countdownTime);
+                    Thread.sleep(1000);
+                    countdownTime--;
+                }
+            } catch (InterruptedException | IOException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+    
     public void stopServer() throws IOException
     {
         running=false;
@@ -163,6 +187,7 @@ public class Server extends Thread {
                 clients.get(i).getWriterStream().writeUTF(mess);
         }
     }
+    
     public void sendToClient(String message)
     {
          if(message.equals("exit"))

@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 /*
  * ClientGUI.java
  *
@@ -29,6 +30,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private JLabel ipaddressLabel;
     private JLabel portLabel;
     private static JLabel scoreLabel;
+    private JLabel timerLabel;
     
     private JTextField ipaddressText;
     private JTextField portText;
@@ -79,7 +81,9 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         portLabel.setBounds(10,55,50,25);
         
         scoreLabel=new JLabel("Score : 0");
-        scoreLabel.setBounds(10,90,100,25);
+        scoreLabel.setBounds(10,55,100,25);
+        timerLabel = new JLabel("Time: N/A");
+        timerLabel.setBounds(10, 25, 100, 25);
         
         ipaddressText=new JTextField("localhost");
         ipaddressText.setBounds(90,25,100,25);
@@ -100,6 +104,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         registerPanel.add(registerButton);
        
         gameStatusPanel.add(scoreLabel);
+        gameStatusPanel.add(timerLabel);
             
         client=Client.getGameClient();
          
@@ -185,6 +190,12 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     }
 
     public void windowDeactivated(WindowEvent e) {
+    }
+    
+    private void updateTimerLabel(String timerMessage) {
+        SwingUtilities.invokeLater(() -> {
+            timerLabel.setText(timerMessage + " seconds");
+        });
     }
     
     public class ClientRecivingThread extends Thread
@@ -293,6 +304,9 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                       boardPanel.removeTank(id);
                   }
                }
+               else if (sentence.startsWith("Time:")) {
+                      updateTimerLabel(sentence);
+                }
                       
             }
            

@@ -306,6 +306,17 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                }
                else if (sentence.startsWith("Time:")) {
                       updateTimerLabel(sentence);
+               }
+               else if (sentence.startsWith("GameEnd")) {
+                    int response = JOptionPane.showConfirmDialog(null, "Time is up! Do you want to play again?", "Tanks 2D Multiplayer Game", JOptionPane.OK_CANCEL_OPTION);
+                    if (response == JOptionPane.OK_OPTION) {
+                        setVisible(false);
+                        dispose();
+                        
+                        new ClientGUI();
+                    } else {
+                        System.exit(0);
+                    }
                 }
                       
             }

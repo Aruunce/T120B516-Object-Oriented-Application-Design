@@ -158,6 +158,12 @@ public class Server extends Thread {
         }
     }
     
+    private void resetMatch() {
+        countdownTime = 30;
+        clients.clear();
+        timerRunning = false;
+    }
+    
     public void startTimer() {
         timerRunning = true;
         
@@ -167,6 +173,10 @@ public class Server extends Thread {
                     BroadCastMessage("Time: " + countdownTime);
                     Thread.sleep(1000);
                     countdownTime--;
+                }
+                if (countdownTime < 0) {
+                    BroadCastMessage("GameEnd");
+                    resetMatch();
                 }
             } catch (InterruptedException | IOException ex) {
                 ex.printStackTrace();

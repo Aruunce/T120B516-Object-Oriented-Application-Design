@@ -21,6 +21,7 @@ public class Tank {
     private int direction=1;
     private float velocityX=0.03125f,velocityY=0.03125f;
     private int width=559,height=473;
+    private int lives = 3;
 
     public int getDirection() 
     {
@@ -77,6 +78,17 @@ public class Tank {
     public void setYposition(int y)
     {
         posiY=y;
+    }
+    public int getLives() {
+        return lives;
+    }
+    public void reduceLives() {
+        if (lives > 0) {
+            lives--;
+        }
+    }
+    public boolean isDead() {
+        return lives <= 0;
     }
     public void moveLeft()
     {
@@ -212,42 +224,40 @@ public class Tank {
         curBomb++;
     
     }
-    public boolean checkCollision(int xP,int yP)
-    {
-        ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
-        int x,y;
-        for(int i=1;i<clientTanks.size();i++) {
-            if(clientTanks.get(i)!=null) 
-            {
-                x=clientTanks.get(i).getXposition();
-                y=clientTanks.get(i).getYposition();
-                if(direction==1)
-                {       
-                    if(((yP<=y+43)&&yP>=y)&&((xP<=x+43&&xP>=x)||(xP+43>=x&&xP+43<=x+43))) 
-                    { 
-                        return true;
+    public boolean checkCollision(int x, int y) {
+        ArrayList<Tank> clientTanks = GameBoardPanel.getClients();
+    
+        for (int i = 1; i < clientTanks.size(); i++) {
+            if (clientTanks.get(i) != null) {
+                int tankX  = clientTanks.get(i).getXposition();
+                int tankY  = clientTanks.get(i).getYposition();
+
+                if ((y >= tankY && y <= tankY + 43) && (x >= tankX && x <= tankX + 43)) {
+                    Tank collidedTank = clientTanks.get(i);
+
+                    // Reduce the tank's lives upon collision
+                    collidedTank.reduceLives();
+                    System.out.println("Tank " + collidedTank.getTankID() + " was hit! Lives left: " + collidedTank.getLives());
+
+                    // Send updated lives to the server
+                    Client.getGameClient().sendToServer("UpdateLives:" + collidedTank.getTankID() + "," + collidedTank.getLives());
+
+                    // If tank is dead, notify the server
+                    if (collidedTank.getLives() <= 0) {
+                        Client.getGameClient().sendToServer("Remove:" + collidedTank.getTankID());
                     }
-                }
-                else if(direction==2)
-                {
-                    if(((xP+43>=x)&&xP+43<=x+43)&&((yP<=y+43&yP>=y)||(yP+43>=y&&yP+43<=y+43))) 
-                    { 
-                        return true;
+
+                    // Update score and repaint GUI
+                    ClientGUI.setScore(50);
+                    ClientGUI.gameStatusPanel.repaint();
+
+                    try {
+                        Thread.sleep(200);  // Brief delay
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
                     }
-                }
-                else if(direction==3)
-                {
-                    if(((yP+43>=y)&&yP+43<=y+43)&&((xP<=x+43&&xP>=x)||(xP+43>=x&&xP+43<=x+43))) 
-                    { 
-                        return true;
-                    }
-                }
-                else if(direction==4)
-                {
-                    if(((xP<=x+43)&&xP>=x)&&((yP<=y+43&&yP>=y)||(yP+43>=y&&yP+43<=y+43))) 
-                    { 
-                        return true;
-                    }
+
+                    return true;
                 }
             }
         }

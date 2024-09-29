@@ -60,10 +60,10 @@ public class Obstacle {
         // center
         obstacles.add(new Obstacle(304, 273));
         // other
-        obstacles.add(new Obstacle(214, 200));
-        obstacles.add(new Obstacle(394, 200));
-        obstacles.add(new Obstacle(214, 343));
-        obstacles.add(new Obstacle(394, 343));
+        obstacles.add(new Obstacle(214, 205));
+        obstacles.add(new Obstacle(394, 205));
+        obstacles.add(new Obstacle(214, 338));
+        obstacles.add(new Obstacle(394, 338));
 
         return obstacles;
     }

@@ -5,14 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-/*
- * Server.java
- *
- * Created on 21, 2008, 09:41
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+
 public class Server extends Thread {
     
     /**
@@ -133,7 +126,27 @@ public class Server extends Thread {
                     ex.printStackTrace();
                 }
                 clients.set(id-1,null);
-            }     
+            }   
+            else if (sentence.startsWith("UpdateLives")) {
+                String[] parts = sentence.split(":");
+                int id = Integer.parseInt(parts[1].split(",")[0]);
+                int updatedLives = Integer.parseInt(parts[1].split(",")[1]);
+                
+                ClientInfo tank = clients.get(id - 1);
+                if (tank != null) {
+                    tank.setLives(updatedLives);
+                    System.out.println("Updated lives for Tank " + id + ": " + updatedLives);
+
+                    if (tank.isDead()) {
+                        try {
+                            BroadCastMessage("Remove:" + id);
+                            clients.set(id - 1, null);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
             else if(sentence.startsWith("Exit"))
             {
                 int id=Integer.parseInt(sentence.substring(4));
@@ -234,6 +247,7 @@ public class Server extends Thread {
     {
         DataOutputStream writer;
         int posX,posY,direction;
+        int lives = 3;
         
         public ClientInfo(DataOutputStream writer,int posX,int posY,int direction)
         {
@@ -270,6 +284,24 @@ public class Server extends Thread {
         public int getDir()
         {
             return direction;
+        }
+        
+        public void reduceLives() {
+            if (lives > 0) {
+                lives--;
+            }
+        }
+        
+        public boolean isDead() {
+            return lives <= 0;
+        }
+
+        public int getLives() {
+            return lives;
+        }
+
+        public void setLives(int lives) {
+            this.lives = lives;
         }
     }
     

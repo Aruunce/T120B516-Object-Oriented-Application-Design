@@ -14,14 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-/*
- * ClientGUI.java
- *
- * Created on 21, 2008, 02:26
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+
 
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
 {
@@ -30,6 +23,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private JLabel ipaddressLabel;
     private JLabel portLabel;
     private static JLabel scoreLabel;
+    private static JLabel livesLabel;
     private JLabel timerLabel;
     
     private JTextField ipaddressText;
@@ -44,6 +38,9 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private Tank clientTank;
     
     private static int score;
+    private static int lives;
+    private static final int INITIAL_LIVES=3;
+
     
     int width=790,height=580;
     boolean isRunning=true;
@@ -54,6 +51,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     public ClientGUI() 
     {
         score=0;
+        lives = INITIAL_LIVES;
         setTitle("Multiclients Tanks Game");
         setSize(width,height);
         setLocation(60,100);
@@ -84,6 +82,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         scoreLabel.setBounds(10,55,100,25);
         timerLabel = new JLabel("Time: N/A");
         timerLabel.setBounds(10, 25, 100, 25);
+        livesLabel = new JLabel("Lives: " + lives);
+        livesLabel.setBounds(10, 120, 100, 25);
         
         ipaddressText=new JTextField("localhost");
         ipaddressText.setBounds(90,25,100,25);
@@ -105,6 +105,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
        
         gameStatusPanel.add(scoreLabel);
         gameStatusPanel.add(timerLabel);
+        gameStatusPanel.add(livesLabel);
+
             
         client=Client.getGameClient();
          
@@ -127,6 +129,18 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     {
         score+=scoreParametar;
         scoreLabel.setText("Score : "+score);
+    }
+    
+    public static void reduceLives() {
+        if (lives > 0) {
+            lives--;
+            livesLabel.setText("Lives: " + lives);
+        }
+        if (lives == 0) {
+            // Handle game over logic
+            JOptionPane.showMessageDialog(null, "Game Over! You have no lives left.");
+            System.exit(0); // Or restart the game
+        }
     }
     
     public void actionPerformed(ActionEvent e) 
@@ -276,7 +290,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                   
                   if(id==clientTank.getTankID())
                   {
-                        int response=JOptionPane.showConfirmDialog(null,"Sorry, You are loss. Do you want to try again ?","Tanks 2D Multiplayer Game",JOptionPane.OK_CANCEL_OPTION);
+                        reduceLives();
+                        int response=JOptionPane.showConfirmDialog(null,"Sorry, You lost. Do you want to try again ?","Tanks 2D Multiplayer Game",JOptionPane.OK_CANCEL_OPTION);
                         if(response==JOptionPane.OK_OPTION)
                         {
                             //client.closeAll();

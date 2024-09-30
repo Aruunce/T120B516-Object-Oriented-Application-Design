@@ -106,6 +106,14 @@ public class Bomb {
                 return true;
             }
         }
+
+        for (Obstacle obstacle : Obstacle.getObstacles()) {
+            if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     return false;
 }

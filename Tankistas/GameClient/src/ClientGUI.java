@@ -19,7 +19,17 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
     private JLabel portLabel;
     private static JLabel scoreLabel;
     private static JLabel livesLabel; // Lives label
+    private JLabel timerLabel;
 
+import javax.swing.SwingUtilities;
+/*
+ * ClientGUI.java
+ *
+ * Created on 21, 2008, 02:26
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
     private JTextField ipaddressText;
     private JTextField portText;
 
@@ -63,27 +73,31 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
         gameStatusPanel.setSize(200, 300);
         gameStatusPanel.setBounds(560, 210, 200, 311);
         gameStatusPanel.setLayout(null);
-
-        ipaddressLabel = new JLabel("IP address: ");
-        ipaddressLabel.setBounds(10, 25, 70, 25);
-
-        portLabel = new JLabel("Port: ");
-        portLabel.setBounds(10, 55, 50, 25);
-
-        scoreLabel = new JLabel("Score : 0");
-        scoreLabel.setBounds(10, 90, 100, 25);
-
+      
+        ipaddressLabel=new JLabel("IP address: ");
+        ipaddressLabel.setBounds(10,25,70,25);
+        
+        portLabel=new JLabel("Port: ");
+        portLabel.setBounds(10,55,50,25);
+        
+        scoreLabel=new JLabel("Score : 0");
+        scoreLabel.setBounds(10,55,100,25);
+        timerLabel = new JLabel("Time: N/A");
+        timerLabel.setBounds(10, 25, 100, 25);
+      
+      
         livesLabel = new JLabel("Lives: " + lives); // Initialize lives label
         livesLabel.setBounds(10, 120, 100, 25); // Set position
-
-        ipaddressText = new JTextField("localhost");
-        ipaddressText.setBounds(90, 25, 100, 25);
-
-        portText = new JTextField("11111");
-        portText.setBounds(90, 55, 100, 25);
-
-        registerButton = new JButton("Register");
-        registerButton.setBounds(60, 100, 90, 25);
+        
+        ipaddressText=new JTextField("localhost");
+        ipaddressText.setBounds(90,25,100,25);
+        
+        portText=new JTextField("11111");
+        portText.setBounds(90,55,100,25);
+       
+        registerButton=new JButton("Register");
+        registerButton.setBounds(60,100,90,25);
+      
         registerButton.addActionListener(this);
         registerButton.setFocusable(true);
 
@@ -94,13 +108,15 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
         registerPanel.add(registerButton);
 
         gameStatusPanel.add(scoreLabel);
+        gameStatusPanel.add(timerLabel);
         gameStatusPanel.add(livesLabel); // Add lives label to the game status panel
-
-        client = Client.getGameClient();
-        clientTank = new Tank();
-        boardPanel = new GameBoardPanel(clientTank, client, false);
-
-        getContentPane().add(registerPanel);
+            
+        client=Client.getGameClient();
+         
+        clientTank=new Tank();
+        boardPanel=new GameBoardPanel(clientTank,client,false);
+        
+        getContentPane().add(registerPanel);        
         getContentPane().add(gameStatusPanel);
         getContentPane().add(boardPanel);
         setVisible(true);
@@ -169,9 +185,16 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
     public void windowActivated(WindowEvent e) {}
 
-    public void windowDeactivated(WindowEvent e) {}
-
-    public class ClientReceivingThread extends Thread {
+    public void windowDeactivated(WindowEvent e) { }
+    
+    private void updateTimerLabel(String timerMessage) {
+        SwingUtilities.invokeLater(() -> {
+            timerLabel.setText(timerMessage + " seconds");
+        });
+    }
+    
+    public class ClientRecivingThread extends Thread
+    {
         Socket clientSocket;
         DataInputStream reader;
 
@@ -244,16 +267,37 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
                         } else {
                             System.exit(0);
                         }
-                    } else {
-                        boardPanel.removeTank(id);
-                    }
-                } else if (sentence.startsWith("Exit")) {
-                    int id = Integer.parseInt(sentence.substring(4));
 
-                    if (id != clientTank.getTankID()) {
-                        boardPanel.removeTank(id);
+                  }
+                  else
+                  {
+                      boardPanel.removeTank(id);
+                  }
+               }
+               else if(sentence.startsWith("Exit"))
+               {
+                   int id=Integer.parseInt(sentence.substring(4));
+                  
+                  if(id!=clientTank.getTankID())
+                  {
+                      boardPanel.removeTank(id);
+                  }
+               }
+               else if (sentence.startsWith("Time:")) {
+                      updateTimerLabel(sentence);
+               }
+               else if (sentence.startsWith("GameEnd")) {
+                    int response = JOptionPane.showConfirmDialog(null, "Time is up! Do you want to play again?", "Tanks 2D Multiplayer Game", JOptionPane.OK_CANCEL_OPTION);
+                    if (response == JOptionPane.OK_OPTION) {
+                        setVisible(false);
+                        dispose();
+                        
+                        new ClientGUI();
+                    } else {
+                        System.exit(0);
                     }
                 }
+                      
             }
 
             try {

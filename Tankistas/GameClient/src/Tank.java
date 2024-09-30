@@ -251,6 +251,13 @@ public class Tank {
                 }
             }
         }
+        
+        for (Obstacle obstacle : Obstacle.getObstacles()) {
+            if (obstacle.collidesWith(xP, yP, ImageBuff.getWidth(), ImageBuff.getHeight())) {
+                return true;
+            }
+        }
+        
         return false;
     }
 }

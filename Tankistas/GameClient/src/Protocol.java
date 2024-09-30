@@ -44,4 +44,8 @@ public class Protocol {
         message="Exit"+id;
         return message;
     }
+    
+     public String updateLivesPacket(int tankID, int lives) {
+        return "updateLives:" + tankID + ":" + lives;
+    }
 }

@@ -63,32 +63,47 @@ public class Bomb {
         return bombBuffImage;
     }
     
-    public boolean checkCollision() 
-    {
-        ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
-        int x,y;
-        for(int i=1;i<clientTanks.size();i++) {
-            if(clientTanks.get(i)!=null) {
-                x=clientTanks.get(i).getXposition();
-                y=clientTanks.get(i).getYposition();
-                
-                if((yPosi>=y&&yPosi<=y+43)&&(xPosi>=x&&xPosi<=x+43)) 
-                {
-                    
-                    ClientGUI.setScore(50);
-                    
-                    ClientGUI.gameStatusPanel.repaint();
-                    
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                    if(clientTanks.get(i)!=null)
-                     Client.getGameClient().sendToServer(new Protocol().RemoveClientPacket(clientTanks.get(i).getTankID()));  
-                    
-                    return true;
+   public boolean checkCollision() {
+    ArrayList<Tank> clientTanks = GameBoardPanel.getClients();
+    int x, y;
+    
+    // Loop through the tanks to check for collisions
+    for (int i = 1; i < clientTanks.size(); i++) {
+        if (clientTanks.get(i) != null) {
+            x = clientTanks.get(i).getXposition();
+            y = clientTanks.get(i).getYposition();
+
+            // Check if the current tank collides with another tank
+            if ((yPosi >= y && yPosi <= y + 43) && (xPosi >= x && xPosi <= x + 43)) {
+                Tank collidedTank = clientTanks.get(i);
+
+                // Reduce the tank's lives upon collision
+                collidedTank.reduceLives();
+                System.out.println("Tank " + collidedTank.getTankID() + " was hit! Lives left: " + collidedTank.getLives());
+
+                // Send the updated lives to the server
+                Client.getGameClient().sendToServer(new Protocol().updateLivesPacket(collidedTank.getTankID(), collidedTank.getLives()));
+
+                // Check if the tank is out of lives
+                if (collidedTank.getLives() <= 0) {
+                    System.out.println("Tank " + collidedTank.getTankID() + " is destroyed!");
+
+                    // Notify the server to remove the destroyed tank
+                    Client.getGameClient().sendToServer(new Protocol().RemoveClientPacket(collidedTank.getTankID()));
                 }
+
+                // Update the score and repaint the game status
+                ClientGUI.setScore(50);
+                ClientGUI.gameStatusPanel.repaint();
+
+                // Optional delay to simulate a brief pause after a collision
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+                return true;
             }
         }
 
@@ -100,6 +115,9 @@ public class Bomb {
         
         return false;
     }
+    return false;
+}
+
     
     
     

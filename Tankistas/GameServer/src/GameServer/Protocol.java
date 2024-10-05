@@ -1,3 +1,4 @@
+package GameServer;
 /*
  * Protocol.java
  *

@@ -1,8 +1,11 @@
+package GameClient;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+
+
 
 public class Obstacle {
 

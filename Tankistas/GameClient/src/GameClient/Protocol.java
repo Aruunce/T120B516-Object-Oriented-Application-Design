@@ -1,3 +1,4 @@
+package GameClient;
 /*
  * Protocol.java
  *

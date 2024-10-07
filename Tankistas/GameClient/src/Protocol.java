@@ -34,6 +34,12 @@ public class Protocol {
         return message;
     }
     
+    public String HitPacket(int id)
+    {
+        message="Hit"+id;
+        return message;
+    }
+    
     public String RemoveClientPacket(int id)
     {
         message="Remove"+id;

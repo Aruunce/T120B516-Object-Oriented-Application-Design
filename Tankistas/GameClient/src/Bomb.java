@@ -74,9 +74,9 @@ public class Bomb {
                 
                 if((yPosi>=y&&yPosi<=y+43)&&(xPosi>=x&&xPosi<=x+43)) 
                 {
+                    Client.getGameClient().sendToServer(new Protocol().HitPacket(clientTanks.get(i).getTankID()));
                     
                     ClientGUI.setScore(50);
-                    
                     ClientGUI.gameStatusPanel.repaint();
                     
                     try {
@@ -84,8 +84,6 @@ public class Bomb {
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                    if(clientTanks.get(i)!=null)
-                     Client.getGameClient().sendToServer(new Protocol().RemoveClientPacket(clientTanks.get(i).getTankID()));  
                     
                     return true;
                 }

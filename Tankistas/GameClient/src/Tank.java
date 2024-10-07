@@ -45,12 +45,12 @@ public class Tank {
     
     /** Creates a new instance of Tank */
     public Tank() 
-    {  
-        while(posiX<70|posiY<50|posiY>height-43|posiX>width-43)
-        {
-            posiX=(int)(Math.random()*width);
-            posiY=(int)(Math.random()*height);
-        }
+    {
+        do {
+            posiX = (int)(Math.random() * width);
+            posiY = (int)(Math.random() * height);
+        } while (posiX < 70 || posiY < 50 || posiY > height - 43 || posiX > width - 43 || checkCollision(posiX, posiY));
+
         loadImage(4);
         
     }
@@ -232,44 +232,50 @@ public class Tank {
     {
         ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
         int x,y;
-        for(int i=1;i<clientTanks.size();i++) {
-            if(clientTanks.get(i)!=null) 
-            {
-                x=clientTanks.get(i).getXposition();
-                y=clientTanks.get(i).getYposition();
-                if(direction==1)
-                {       
-                    if(((yP<=y+43)&&yP>=y)&&((xP<=x+43&&xP>=x)||(xP+43>=x&&xP+43<=x+43))) 
-                    { 
-                        return true;
-                    }
-                }
-                else if(direction==2)
+        
+        if (clientTanks != null) {
+            for(int i=1;i<clientTanks.size();i++) {
+                if(clientTanks.get(i)!=null) 
                 {
-                    if(((xP+43>=x)&&xP+43<=x+43)&&((yP<=y+43&yP>=y)||(yP+43>=y&&yP+43<=y+43))) 
-                    { 
-                        return true;
+                    x=clientTanks.get(i).getXposition();
+                    y=clientTanks.get(i).getYposition();
+                    if(direction==1)
+                    {       
+                        if(((yP<=y+43)&&yP>=y)&&((xP<=x+43&&xP>=x)||(xP+43>=x&&xP+43<=x+43))) 
+                        { 
+                            return true;
+                        }
                     }
-                }
-                else if(direction==3)
-                {
-                    if(((yP+43>=y)&&yP+43<=y+43)&&((xP<=x+43&&xP>=x)||(xP+43>=x&&xP+43<=x+43))) 
-                    { 
-                        return true;
+                    else if(direction==2)
+                    {
+                        if(((xP+43>=x)&&xP+43<=x+43)&&((yP<=y+43&yP>=y)||(yP+43>=y&&yP+43<=y+43))) 
+                        { 
+                            return true;
+                        }
                     }
-                }
-                else if(direction==4)
-                {
-                    if(((xP<=x+43)&&xP>=x)&&((yP<=y+43&&yP>=y)||(yP+43>=y&&yP+43<=y+43))) 
-                    { 
-                        return true;
+                    else if(direction==3)
+                    {
+                        if(((yP+43>=y)&&yP+43<=y+43)&&((xP<=x+43&&xP>=x)||(xP+43>=x&&xP+43<=x+43))) 
+                        { 
+                            return true;
+                        }
+                    }
+                    else if(direction==4)
+                    {
+                        if(((xP<=x+43)&&xP>=x)&&((yP<=y+43&&yP>=y)||(yP+43>=y&&yP+43<=y+43))) 
+                        { 
+                            return true;
+                        }
                     }
                 }
             }
         }
         
+        int imageWidth = (ImageBuff != null) ? ImageBuff.getWidth() : 43;
+        int imageHeight = (ImageBuff != null) ? ImageBuff.getHeight() : 43;
+        
         for (Obstacle obstacle : Obstacle.getObstacles()) {
-            if (obstacle.collidesWith(xP, yP, ImageBuff.getWidth(), ImageBuff.getHeight())) {
+            if (obstacle.collidesWith(xP, yP, imageWidth, imageHeight)) {
                 return true;
             }
         }

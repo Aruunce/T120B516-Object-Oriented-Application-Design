@@ -21,6 +21,22 @@ public class Tank {
     private int direction=1;
     private float velocityX=0.03125f,velocityY=0.03125f;
     private int width=559,height=473;
+    private int lives=3;
+    
+    public int getLives()
+    {
+        return lives;
+    }
+    
+    public void reduceLives()
+    {
+        lives--;
+    }
+    
+    public boolean isDead()
+    {
+        return lives <= 0;
+    }
 
     public int getDirection() 
     {

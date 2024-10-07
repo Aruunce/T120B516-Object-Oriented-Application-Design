@@ -30,7 +30,7 @@ public class Server extends Thread {
     private Protocol protocol;
     private boolean running=true;
     
-    private int countdownTime = 30;
+    private int countdownTime = 90;
     private boolean timerRunning = false;
     
     public Server() throws SocketException 
@@ -123,6 +123,14 @@ public class Server extends Thread {
                     ex.printStackTrace();
                 }
             }
+            else if(sentence.startsWith("Hit"))
+            {
+                try {
+                    BroadCastMessage(sentence);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
             else if(sentence.startsWith("Remove"))
             {
                 int id=Integer.parseInt(sentence.substring(6));
@@ -159,7 +167,7 @@ public class Server extends Thread {
     }
     
     private void resetMatch() {
-        countdownTime = 30;
+        countdownTime = 90;
         clients.clear();
         timerRunning = false;
     }

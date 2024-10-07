@@ -31,6 +31,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private JLabel portLabel;
     private static JLabel scoreLabel;
     private JLabel timerLabel;
+    private JLabel livesLabel;
     
     private JTextField ipaddressText;
     private JTextField portText;
@@ -84,6 +85,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         scoreLabel.setBounds(10,55,100,25);
         timerLabel = new JLabel("Time: N/A");
         timerLabel.setBounds(10, 25, 100, 25);
+        livesLabel = new JLabel("Lives: 3");
+        livesLabel.setBounds(10, 85, 100, 25);
         
         ipaddressText=new JTextField("localhost");
         ipaddressText.setBounds(90,25,100,25);
@@ -105,6 +108,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
        
         gameStatusPanel.add(scoreLabel);
         gameStatusPanel.add(timerLabel);
+        gameStatusPanel.add(livesLabel);
             
         client=Client.getGameClient();
          
@@ -198,6 +202,12 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         });
     }
     
+    public void updateLivesLabel(int lives) {
+        SwingUtilities.invokeLater(() -> {
+            livesLabel.setText("Lives: " + lives);
+        });
+    }
+    
     public class ClientRecivingThread extends Thread
     {
         Socket clientSocket;
@@ -269,6 +279,21 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                         boardPanel.getTank(id).Shot();
                     }
                     
+               }
+               else if(sentence.startsWith("Hit"))
+               {
+                    int hitTankID = Integer.parseInt(sentence.substring(3));
+
+                    if (hitTankID == clientTank.getTankID()) {
+                        clientTank.reduceLives();
+                        updateLivesLabel(clientTank.getLives());
+
+                        if(clientTank.isDead()) {
+                            Client.getGameClient().sendToServer(new Protocol().RemoveClientPacket(clientTank.getTankID()));  
+                        }
+                    }
+                    
+                    boardPanel.repaint();
                }
                else if(sentence.startsWith("Remove"))
                {

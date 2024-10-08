@@ -99,7 +99,16 @@ public class Bomb {
         return false;
     }
     
-    
+    public boolean visualizeCollision() 
+    {
+        for (Obstacle obstacle : Obstacle.getObstacles()) {
+            if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     public void startBombThread(boolean chekCollision) {
         
@@ -210,6 +219,10 @@ public class Bomb {
                     {
                         yPosi=(int)(yPosi-yPosi*velocityY);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);
@@ -228,6 +241,10 @@ public class Bomb {
                     {
                         xPosi=(int)(xPosi+xPosi*velocityX);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);
@@ -245,6 +262,10 @@ public class Bomb {
                     {    
                         yPosi=(int)(yPosi+yPosi*velocityY);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);
@@ -262,6 +283,10 @@ public class Bomb {
                     {
                         xPosi=(int)(xPosi-xPosi*velocityX);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);

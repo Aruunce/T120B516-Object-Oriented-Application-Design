@@ -28,6 +28,23 @@ public class Bomb {
     public Bomb(int x,int y,int direction) {
         final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer("boom.wav");
         final InputStream stream_boom =new ByteArrayInputStream(sound_boom.getSamples());
+        
+        int offset = 10;
+        switch (direction) {
+            case 1:
+                y -= offset;
+                break;
+            case 2:
+                x += offset;
+                break;
+            case 3:
+                y += offset;
+                break;
+            case 4:
+                x -= offset;
+                break;
+        }
+        
         xPosi=x;
         yPosi=y;
         this.direction=direction;
@@ -99,7 +116,30 @@ public class Bomb {
         return false;
     }
     
-    
+    public boolean visualizeCollision() 
+    {
+        ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
+        int x,y;
+        for(int i=1;i<clientTanks.size();i++) {
+            if(clientTanks.get(i)!=null) {
+                x=clientTanks.get(i).getXposition();
+                y=clientTanks.get(i).getYposition();
+
+                if((yPosi>=y&&yPosi<=y+43)&&(xPosi>=x&&xPosi<=x+43)) 
+                {
+                    return true;
+                }
+            }
+        }
+        
+        for (Obstacle obstacle : Obstacle.getObstacles()) {
+            if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     public void startBombThread(boolean chekCollision) {
         
@@ -210,6 +250,10 @@ public class Bomb {
                     {
                         yPosi=(int)(yPosi-yPosi*velocityY);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);
@@ -228,6 +272,10 @@ public class Bomb {
                     {
                         xPosi=(int)(xPosi+xPosi*velocityX);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);
@@ -245,6 +293,10 @@ public class Bomb {
                     {    
                         yPosi=(int)(yPosi+yPosi*velocityY);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);
@@ -262,6 +314,10 @@ public class Bomb {
                     {
                         xPosi=(int)(xPosi-xPosi*velocityX);
                         
+                        if(visualizeCollision()) 
+                        {
+                            break;
+                        }
                         try {
                             
                             Thread.sleep(40);

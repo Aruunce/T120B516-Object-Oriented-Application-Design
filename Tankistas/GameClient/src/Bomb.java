@@ -120,7 +120,7 @@ public class Bomb {
     {
         ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
         int x,y;
-        for(int i=0;i<clientTanks.size();i++) {
+        for(int i=1;i<clientTanks.size();i++) {
             if(clientTanks.get(i)!=null) {
                 x=clientTanks.get(i).getXposition();
                 y=clientTanks.get(i).getYposition();

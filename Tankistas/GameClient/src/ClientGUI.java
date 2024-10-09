@@ -238,6 +238,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                     clientTank.setTankID(id);
                     System.out.println("My ID= "+id);
                     
+                    boardPanel.registerNewTank(clientTank);
                }
                else if(sentence.startsWith("NewClient"))
                {

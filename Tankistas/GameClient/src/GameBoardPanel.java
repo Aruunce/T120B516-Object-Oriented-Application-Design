@@ -10,6 +10,8 @@ import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import java.util.List;
+
 /*
  * GameBoardPanel.java
  *
@@ -25,19 +27,20 @@ public class GameBoardPanel extends JPanel {
     private int width=609;
     private int height=523;
     private static ArrayList<Tank> tanks;
-    private static ArrayList<Obstacle> obstacles;
+    //private static ArrayList<Obstacle> obstacles;
+    private List<Obstacle> obstacles;
     private boolean gameStatus;
-    public GameBoardPanel(Tank tank,Client client, boolean gameStatus) 
+    public GameBoardPanel(Tank tank, Client client, boolean gameStatus, List<Obstacle> obstacles) 
     {
         this.tank=tank;
         this.gameStatus=gameStatus;
+        this.obstacles = obstacles;
         setSize(width,height);
         setBounds(-50,0,width,height);
         addKeyListener(new InputManager(tank));
         setFocusable(true);
         
         tanks=new ArrayList<Tank>(100);
-        obstacles = Obstacle.getObstacles();
         
         for(int i=0;i<100;i++)
         {

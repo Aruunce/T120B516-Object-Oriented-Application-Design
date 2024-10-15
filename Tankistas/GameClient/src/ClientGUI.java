@@ -7,6 +7,8 @@ import java.awt.event.WindowListener;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.JComboBox;
 /*
  * ClientGUI.java
  *
@@ -51,6 +54,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private GameBoardPanel boardPanel;
     
     private SoundManger soundManger;
+    private JComboBox<String> mapSelectionComboBox;
     
     public ClientGUI() 
     {
@@ -63,16 +67,17 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         addWindowListener(this);
+        
         registerPanel=new JPanel();
         registerPanel.setBackground(Color.YELLOW);
         registerPanel.setSize(200,140);
-        registerPanel.setBounds(560,50,200,140);
+        registerPanel.setBounds(560,50,200,200);//CHANGED HERE
         registerPanel.setLayout(null);
         
         gameStatusPanel=new JPanel();
         gameStatusPanel.setBackground(Color.YELLOW);
         gameStatusPanel.setSize(200,300);
-        gameStatusPanel.setBounds(560,210,200,311);
+        gameStatusPanel.setBounds(560,260,200,300);//CHANGED HERE
         gameStatusPanel.setLayout(null);
      
         ipaddressLabel=new JLabel("IP address: ");
@@ -99,21 +104,30 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         registerButton.addActionListener(this);
         registerButton.setFocusable(true);
         
-       
+        String[] maps = { "Easy Map", "Medium Map", "Hard Map" };
+        mapSelectionComboBox = new JComboBox<>(maps);
+        mapSelectionComboBox.setBounds(30, 140, 150, 25);
+        
+        
         registerPanel.add(ipaddressLabel);
         registerPanel.add(portLabel);
         registerPanel.add(ipaddressText);
         registerPanel.add(portText);
         registerPanel.add(registerButton);
+        registerPanel.add(mapSelectionComboBox);
        
         gameStatusPanel.add(scoreLabel);
         gameStatusPanel.add(timerLabel);
         gameStatusPanel.add(livesLabel);
-            
+                  
         client=Client.getGameClient();
          
         clientTank=new Tank();
-        boardPanel=new GameBoardPanel(clientTank,client,false);
+        AbstractMapFactory mapFactory = new ConcreteMapFactory();
+        MapFactory initialMap = mapFactory.getMapFactory(1); // Start with Easy Map
+        List<Obstacle> initialObstacles = initialMap.createObstacles();
+        boardPanel = new GameBoardPanel(clientTank, client, false, initialObstacles);
+        
         
         getContentPane().add(registerPanel);        
         getContentPane().add(gameStatusPanel);
@@ -140,6 +154,19 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         if(obj==registerButton)
         {
             registerButton.setEnabled(false);
+            // Get the selected map level based on the JComboBox index
+            int selectedMapIndex = mapSelectionComboBox.getSelectedIndex() + 1; // 1 for easy, 2 for medium, 3 for hard
+            
+            // Create the map using the factory
+            AbstractMapFactory mapFactory = new ConcreteMapFactory();
+            MapFactory map = mapFactory.getMapFactory(selectedMapIndex);
+            ArrayList<Obstacle> obstacles = map.createObstacles();
+
+            // Update the GameBoardPanel with the new obstacles
+            boardPanel = new GameBoardPanel(clientTank, client, false, obstacles);
+            getContentPane().remove(2); // Remove the old GameBoardPanel
+            getContentPane().add(boardPanel); // Add the new GameBoardPanel
+            boardPanel.repaint();
             
             try 
             {

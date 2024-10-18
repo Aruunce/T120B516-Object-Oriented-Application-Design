@@ -1,3 +1,5 @@
+package server;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -5,6 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import client.MapAbstractFactory;
+import client.Map;
 /*
  * Server.java
  *
@@ -33,10 +37,13 @@ public class Server extends Thread {
     private int countdownTime = 90;
     private boolean timerRunning = false;
     
+    private Map currentMap;
+    
     public Server() throws SocketException 
     {
         clients=new ArrayList<ClientInfo>();
         protocol=new Protocol();
+        currentMap = MapAbstractFactory.getCurrentMap();
         try {
             serverSocket=new ServerSocket(serverPort);
         } catch (IOException ex) {
@@ -166,10 +173,27 @@ public class Server extends Thread {
         }
     }
     
+    public void changeMap(int mapIndex) throws IOException {
+        // Update the map
+        currentMap = MapAbstractFactory.createMap(mapIndex);
+        
+        // Notify all clients about map change
+        BroadCastMessage("MapChange:" + mapIndex);
+        
+        // Reset the game state
+        resetMatch();
+    }
+    
     private void resetMatch() {
         countdownTime = 90;
         clients.clear();
         timerRunning = false;
+        
+        try {
+            BroadCastMessage("Reset");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public void startTimer() {

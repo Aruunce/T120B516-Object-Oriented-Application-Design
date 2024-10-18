@@ -1,3 +1,5 @@
+package client;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -24,6 +26,7 @@ public class Bomb {
     private int direction;
     public boolean stop=false;
     private float velocityX=0.05f,velocityY=0.05f;
+    private Map currentMap;
     
     public Bomb(int x,int y,int direction) {
         final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer("boom.wav");
@@ -106,8 +109,9 @@ public class Bomb {
                 }
             }
         }
-
-        for (Obstacle obstacle : Obstacle.getObstacles()) {
+            
+        currentMap = MapAbstractFactory.getCurrentMap();
+        for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
                 return true;
             }
@@ -131,8 +135,8 @@ public class Bomb {
                 }
             }
         }
-        
-        for (Obstacle obstacle : Obstacle.getObstacles()) {
+        currentMap = MapAbstractFactory.getCurrentMap();
+        for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
                 return true;
             }

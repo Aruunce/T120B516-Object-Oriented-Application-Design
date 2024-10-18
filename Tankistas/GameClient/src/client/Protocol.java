@@ -1,3 +1,5 @@
+package client;
+
 /*
  * Protocol.java
  *
@@ -49,5 +51,8 @@ public class Protocol {
     {
         message="Exit"+id;
         return message;
+    }
+    public String MapSelectionPacket(int mapIndex) {
+        return "MapSelect:" + mapIndex;
     }
 }

@@ -1,3 +1,5 @@
+package client;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -33,6 +35,12 @@ public class Tank {
         lives--;
     }
     
+    public void resetLives()
+    {
+        lives = 3;
+    }
+    
+    
     public boolean isDead()
     {
         return lives <= 0;
@@ -46,10 +54,11 @@ public class Tank {
     /** Creates a new instance of Tank */
     public Tank() 
     {
+        Map currentMap = MapAbstractFactory.getCurrentMap();
         do {
-            posiX = (int)(Math.random() * width);
-            posiY = (int)(Math.random() * height);
-        } while (posiX < 70 || posiY < 50 || posiY > height - 43 || posiX > width - 43 || checkCollision(posiX, posiY));
+            posiX = (int)(Math.random() * currentMap.getWidth());
+            posiY = (int)(Math.random() * currentMap.getHeight());
+        } while (posiX < 70 || posiY < 50 || posiY > currentMap.getHeight() - 43 || posiX > currentMap.getWidth() - 43 || checkCollision(posiX, posiY));
 
         loadImage(4);
         
@@ -228,6 +237,7 @@ public class Tank {
         curBomb++;
     
     }
+    
     public boolean checkCollision(int xP,int yP)
     {
         ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
@@ -271,11 +281,19 @@ public class Tank {
             }
         }
         
+    
         int imageWidth = (ImageBuff != null) ? ImageBuff.getWidth() : 43;
         int imageHeight = (ImageBuff != null) ? ImageBuff.getHeight() : 43;
         
-        for (Obstacle obstacle : Obstacle.getObstacles()) {
+        Map currentMap = MapAbstractFactory.getCurrentMap();
+         
+        for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xP, yP, imageWidth, imageHeight)) {
+                if (obstacle instanceof SlowingObstacle) {
+                    // Reduce tank speed when on slowing obstacle
+                    velocityX *= ((SlowingObstacle) obstacle).getSlowFactor();
+                    velocityY *= ((SlowingObstacle) obstacle).getSlowFactor();
+                }
                 return true;
             }
         }

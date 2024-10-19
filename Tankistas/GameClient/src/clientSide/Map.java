@@ -42,8 +42,8 @@ public abstract class Map {
         for (int index : indices) {
             Position basePos = spawnZones[index];
             // Add some randomness within the safe zone
-            int x = basePos.x + random.nextInt(21) - 10; // ±10 pixels
-            int y = basePos.y + random.nextInt(21) - 10;
+            int x = basePos.x;
+            int y = basePos.y;
             
             if (isValidPosition(x, y)) {
                 return new Position(x, y);

@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 
 public class MediumMap extends Map {
-    private static final int MAP_WIDTH = 800;
-    private static final int MAP_HEIGHT = 600;
+    private static final int MAP_WIDTH = 609;
+    private static final int MAP_HEIGHT = 523;
     
     public MediumMap() {
         obstacles = createObstacles();

@@ -13,10 +13,8 @@ import java.util.ArrayList;
 
 public class GameBoardPanel extends JPanel {
     private Tank tank;
-    //private int width = 609;
-    //private int height = 523;
-    private int width = 700;
-    private int height = 900;
+    private int width = 609;
+    private int height = 523;
     private static ArrayList<Tank> tanks;
     private static ArrayList<Obstacle> obstacles;
     private boolean gameStatus;
@@ -59,15 +57,11 @@ public class GameBoardPanel extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
         
-        g.setColor(Color.GREEN);
-        g.fillRect(70, 50, getWidth()-100, getHeight());
         
-
-
         String imagePath = System.getProperty("user.dir") + "/GameClient/Images/bg.jpg";
         File imgFile = new File(imagePath);
         if (imgFile.exists()) {
-            System.out.println("Loading image from: " + imgFile.getAbsolutePath());
+            //System.out.println("Loading image from: " + imgFile.getAbsolutePath());
             ImageIcon bgImage = new ImageIcon(imgFile.getAbsolutePath());
             g.drawImage(bgImage.getImage(), 70, 50, null);
         } else {
@@ -125,6 +119,7 @@ public class GameBoardPanel extends JPanel {
                 }
             }
         }
+        repaint();
     }
 
     public void registerNewTank(Tank newTank) {

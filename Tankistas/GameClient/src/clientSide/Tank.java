@@ -159,8 +159,8 @@ public class Tank {
 
     public void moveForward() {
         if (direction == 2 || direction == 4) {
-            updateTankImage();
             direction = 1;
+            updateTankImage();
         } else {
             int temp = (int)(posiY - velocityY * posiY);
             if (!checkCollision(posiX, temp) && temp < 50) {

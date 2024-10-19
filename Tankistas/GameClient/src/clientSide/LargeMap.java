@@ -19,14 +19,33 @@ public class LargeMap extends Map {
     @Override
     public ArrayList<Obstacle> createObstacles() {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
-        // Add large map specific obstacles
-        // Using a more complex pattern
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                obstacles.add(new Obstacle(200 + i * 300, 200 + j * 200));
-            }
-        }
-        // Add more obstacles as needed
+        obstacles.add(new Obstacle(124, 100));
+        obstacles.add(new Obstacle(124, 140));
+        obstacles.add(new Obstacle(164, 100));
+        // corner top right
+        obstacles.add(new Obstacle(484, 100));
+        obstacles.add(new Obstacle(484, 140));
+        obstacles.add(new Obstacle(444, 100));
+        // corner bottom left
+        obstacles.add(new Obstacle(124, 433));
+        obstacles.add(new Obstacle(164, 433));
+        obstacles.add(new Obstacle(124, 393));
+        // corner bottom right
+        obstacles.add(new Obstacle(484, 433));
+        obstacles.add(new Obstacle(444, 433));
+        obstacles.add(new Obstacle(484, 393));
+        // edges
+        obstacles.add(new Obstacle(304, 478));
+        obstacles.add(new Obstacle(304, 54));
+        obstacles.add(new Obstacle(73, 273));
+        obstacles.add(new Obstacle(536, 273));
+        // center
+        obstacles.add(new Obstacle(304, 273));
+        // other
+        obstacles.add(new Obstacle(214, 205));
+        obstacles.add(new Obstacle(394, 205));
+        obstacles.add(new Obstacle(214, 338));
+        obstacles.add(new Obstacle(394, 338));
         return obstacles;
     }
     

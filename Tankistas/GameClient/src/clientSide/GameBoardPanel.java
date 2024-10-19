@@ -119,7 +119,7 @@ public class GameBoardPanel extends JPanel {
                 }
             }
         }
-        repaint();
+        repaint(); //Galbut del sito blogai skaiciuoja gyvybiu atemima ir tasku gavima, bet ji panaikinus gaunasi atvirkscias valdymas
     }
 
     public void registerNewTank(Tank newTank) {

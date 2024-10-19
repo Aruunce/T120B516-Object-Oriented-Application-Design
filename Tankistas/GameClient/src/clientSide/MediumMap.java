@@ -35,11 +35,6 @@ public class MediumMap extends Map {
         obstacles.add(new Obstacle(484, 433));
         obstacles.add(new Obstacle(444, 433));
         obstacles.add(new Obstacle(484, 393));
-        // edges
-        obstacles.add(new Obstacle(304, 478));
-        obstacles.add(new Obstacle(304, 54));
-        obstacles.add(new Obstacle(73, 273));
-        obstacles.add(new Obstacle(536, 273));
         // center
         obstacles.add(new Obstacle(304, 273));
         // other

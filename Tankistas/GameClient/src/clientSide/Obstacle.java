@@ -20,7 +20,7 @@ public class Obstacle {
         this.height = 40;
         //this.image = new ImageIcon("Images/obstacle.png").getImage();
 
-        String imagePath = System.getProperty("user.dir") + "/GameClient/Images/obstacle.png";            
+        String imagePath = System.getProperty("user.dir") + "/Images/obstacle.png";            
         File imgFile = new File(imagePath);  // Use File to construct the path
         if (imgFile.exists()) {
             this.image = new ImageIcon(imgFile.getAbsolutePath()).getImage();  // Load image from file

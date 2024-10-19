@@ -62,7 +62,7 @@ public class Tank {
         tankImg = new Image[4];  // Initialize the tank image array
         for (int i = a; i < tankImg.length + a; i++) {
 
-            String imagePath = System.getProperty("user.dir") + "/GameClient/Images/" + i + ".PNG";  // Correct relative path based on your structure
+            String imagePath = System.getProperty("user.dir") + "/Images/" + i + ".PNG";  // Correct relative path based on your structure
             
             File imgFile = new File(imagePath);  // Use File to construct the path
             if (imgFile.exists()) {

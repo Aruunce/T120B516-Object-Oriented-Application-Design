@@ -58,7 +58,7 @@ public class GameBoardPanel extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
         
         
-        String imagePath = System.getProperty("user.dir") + "/GameClient/Images/bg.jpg";
+        String imagePath = System.getProperty("user.dir") + "/Images/bg.jpg";
         File imgFile = new File(imagePath);
         if (imgFile.exists()) {
             //System.out.println("Loading image from: " + imgFile.getAbsolutePath());

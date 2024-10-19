@@ -24,7 +24,7 @@ public class SoundManger {
     AudioInputStream audioInputStream;
     SourceDataLine sourceDataLine;
 
-    String X = System.getProperty("user.dir") + "/GameClient/start.wav";
+    String X = System.getProperty("user.dir") + "/start.wav";
         
     public SoundManger()
     {

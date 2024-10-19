@@ -31,7 +31,7 @@ public class Bomb {
     
     public Bomb(int x,int y,int direction) {
         
-        String Path = System.getProperty("user.dir") + "/GameClient/boom.wav";
+        String Path = System.getProperty("user.dir") + "/boom.wav";
         final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer(Path);
         final InputStream stream_boom =new ByteArrayInputStream(sound_boom.getSamples());
         
@@ -58,7 +58,7 @@ public class Bomb {
 
 
 
-        String imagePath = System.getProperty("user.dir") + "/GameClient/Images/bomb.png";            
+        String imagePath = System.getProperty("user.dir") + "/Images/bomb.png";            
         File imgFile = new File(imagePath);
         if (imgFile.exists()) {
             //System.out.println("Loading image from: " + imgFile.getAbsolutePath());

@@ -1,4 +1,4 @@
-package client;
+package clientSide;
 
 
 import java.util.ArrayList;
@@ -8,25 +8,31 @@ import java.util.ArrayList;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-public class LargeMap extends Map {
+public class SmallMap extends Map {
     private static final int MAP_WIDTH = 800;
     private static final int MAP_HEIGHT = 600;
     
-    public LargeMap() {
+    public SmallMap() {
         obstacles = createObstacles();
     }
     
     @Override
     public ArrayList<Obstacle> createObstacles() {
+        
         ArrayList<Obstacle> obstacles = new ArrayList<>();
-        // Add large map specific obstacles
-        // Using a more complex pattern
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                obstacles.add(new Obstacle(200 + i * 300, 200 + j * 200));
-            }
-        }
-        // Add more obstacles as needed
+        // corner top left
+        obstacles.add(new Obstacle(124, 140));
+        // corner top right
+        obstacles.add(new Obstacle(484, 140));
+        // corner bottom left
+        obstacles.add(new Obstacle(164, 433));
+        // corner bottom right
+        obstacles.add(new Obstacle(444, 433));
+        // center
+        obstacles.add(new Obstacle(304, 273));
+        // other
+        obstacles.add(new Obstacle(214, 205));
+        obstacles.add(new Obstacle(214, 338));
         return obstacles;
     }
     

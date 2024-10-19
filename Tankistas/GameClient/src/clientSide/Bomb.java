@@ -1,8 +1,9 @@
-package client;
+package clientSide;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -29,7 +30,9 @@ public class Bomb {
     private Map currentMap;
     
     public Bomb(int x,int y,int direction) {
-        final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer("boom.wav");
+        
+        String Path = System.getProperty("user.dir") + "/GameClient/boom.wav";
+        final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer(Path);
         final InputStream stream_boom =new ByteArrayInputStream(sound_boom.getSamples());
         
         int offset = 10;
@@ -52,7 +55,20 @@ public class Bomb {
         yPosi=y;
         this.direction=direction;
         stop=false;
-        bombImg=new ImageIcon("Images/bomb.png").getImage();
+
+
+
+        String imagePath = System.getProperty("user.dir") + "/GameClient/Images/bomb.png";            
+        File imgFile = new File(imagePath);
+        if (imgFile.exists()) {
+            //System.out.println("Loading image from: " + imgFile.getAbsolutePath());
+            bombImg = new ImageIcon(imgFile.getAbsolutePath()).getImage();
+        } else {
+            System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
+        }
+
+
+        //bombImg=new ImageIcon("Images/bomb.png").getImage();
         
         bombBuffImage=new BufferedImage(bombImg.getWidth(null),bombImg.getHeight(null),BufferedImage.TYPE_INT_RGB);
         bombBuffImage.createGraphics().drawImage(bombImg,0,0,null);

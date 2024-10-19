@@ -1,9 +1,12 @@
-package client;
+package clientSide;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.io.File;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.util.ArrayList;
@@ -42,8 +45,6 @@ public class GameBoardPanel extends JPanel {
         this.currentMap = MapAbstractFactory.getCurrentMap();
         if (this.currentMap != null) {
             this.obstacles = currentMap.getObstacles();
-            System.out.print(obstacles.size());
-            System.out.print("iejo");
         } else {
             this.obstacles = new ArrayList<>();
         }
@@ -61,11 +62,18 @@ public class GameBoardPanel extends JPanel {
         g.setColor(Color.GREEN);
         g.fillRect(70, 50, getWidth()-100, getHeight());
         
-        // Load and draw background image safely
-        ImageIcon bgImage = new ImageIcon("Images/bg.jpg");
-        if (bgImage.getImage() != null) {
+
+
+        String imagePath = System.getProperty("user.dir") + "/GameClient/Images/bg.jpg";
+        File imgFile = new File(imagePath);
+        if (imgFile.exists()) {
+            System.out.println("Loading image from: " + imgFile.getAbsolutePath());
+            ImageIcon bgImage = new ImageIcon(imgFile.getAbsolutePath());
             g.drawImage(bgImage.getImage(), 70, 50, null);
+        } else {
+            System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
         }
+
         
         // Draw title
         g.setColor(Color.YELLOW);
@@ -76,7 +84,6 @@ public class GameBoardPanel extends JPanel {
         if (obstacles != null) {
             for (Obstacle obstacle : obstacles) {
                 if (obstacle != null) {
-                    System.out.print("Drawing obstacle");
                     obstacle.draw(g);
                 }
             }

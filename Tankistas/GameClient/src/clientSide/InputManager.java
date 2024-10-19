@@ -1,9 +1,7 @@
-package client;
+package clientSide;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
-import java.net.Socket;
 /*
  * InputManager.java
  *

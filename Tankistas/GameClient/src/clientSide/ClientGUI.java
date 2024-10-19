@@ -1,4 +1,4 @@
-package client;
+package clientSide;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -334,7 +334,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 
                     if(id!=clientTank.getTankID())
                     {
-                        boardPanel.getTank(id).Shot();
+                        boardPanel.getTank(id).shot();
                     }
                     
                }

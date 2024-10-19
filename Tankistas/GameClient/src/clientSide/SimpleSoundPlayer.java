@@ -1,4 +1,4 @@
-package client;
+package clientSide;
 
 /*
  * To change this template, choose Tools | Templates
@@ -31,6 +31,11 @@ public class SimpleSoundPlayer  {
         //play sound only once
         sound.play(stream_one);
         // exit
+        try {
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.exit(0);//will be deleted
     }
 

@@ -1,4 +1,4 @@
-package client;
+package clientSide;
 
 /*
  * To change this template, choose Tools | Templates

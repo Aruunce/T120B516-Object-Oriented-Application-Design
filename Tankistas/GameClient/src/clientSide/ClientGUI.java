@@ -334,7 +334,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 
                     if(id!=clientTank.getTankID())
                     {
-                        boardPanel.getTank(id).shot();
+                        boardPanel.getTank(id).shot(false);
                     }
                     
                }

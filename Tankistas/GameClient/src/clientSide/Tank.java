@@ -186,8 +186,12 @@ public class Tank {
     }
 
     public void shot() {
+        shot(true);
+    }
+    
+    public void shot(boolean startThread) {
         bomb[curBomb] = new Bomb(this.getXposition(), this.getYposition(), direction);
-        bomb[curBomb].startBombThread(true);
+        bomb[curBomb].startBombThread(startThread);
         curBomb++;
     }
 

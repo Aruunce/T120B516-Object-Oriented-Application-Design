@@ -1,123 +1,76 @@
 package clientSide;
 
+import clientSide.Commands.Command;
+import clientSide.Commands.MoveBackwardCommand;
+import clientSide.Commands.MoveForwardCommand;
+import clientSide.Commands.MoveLeftCommand;
+import clientSide.Commands.MoveRightCommand;
+import clientSide.Commands.ShootCommand;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-/*
- * InputManager.java
- *
- * Created on 25, 2008, 02:57
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- *
- * @author Mohamed Talaat Saad
- */
 public class InputManager implements KeyListener  
 {
-    private final int LEFT = 37;
-    private  final int RIGHT = 39;
-    private final int UP = 38;
-    private final int DOWN = 40;
-    private static int status=0;    
+    private final int LEFT = KeyEvent.VK_LEFT;
+    private final int RIGHT = KeyEvent.VK_RIGHT;
+    private final int UP = KeyEvent.VK_UP;
+    private final int DOWN = KeyEvent.VK_DOWN;
+    private final int SHOOT = KeyEvent.VK_SPACE;  
     
     private Tank tank;
     private Client client;
-    /** Creates a new instance of InputManager */
+    private Map<Integer, Command> commandMap;
+    private Map<Integer, Boolean> keyStateMap;
+
     public InputManager(Tank tank) 
     {
         this.client=Client.getGameClient();
         this.tank=tank;
         
+        this.commandMap = new HashMap<>();
+        this.keyStateMap = new HashMap<>();
+        
+        commandMap.put(LEFT, new MoveLeftCommand(tank));
+        commandMap.put(RIGHT, new MoveRightCommand(tank));
+        commandMap.put(UP, new MoveForwardCommand(tank));
+        commandMap.put(DOWN, new MoveBackwardCommand(tank));
+        commandMap.put(SHOOT, new ShootCommand(tank));
+
+        keyStateMap.put(LEFT, false);
+        keyStateMap.put(RIGHT, false);
+        keyStateMap.put(UP, false);
+        keyStateMap.put(DOWN, false);
+        keyStateMap.put(SHOOT, false);
     }
 
     public void keyTyped(KeyEvent e) {
     }
 
-    public void keyPressed(KeyEvent e) 
-    {
-
-        if(e.getKeyCode()==LEFT)
-        {
-            if(tank.getDirection()==1|tank.getDirection()==3)
-            {
-                
-                tank.moveLeft();
-                
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        System.out.println("KeyPressed: " + KeyEvent.getKeyText(keyCode));
+        if (commandMap.containsKey(keyCode) && !keyStateMap.get(keyCode)) {
+            keyStateMap.put(keyCode, true);
+            Command command = commandMap.get(keyCode);
+            if (command != null) {
+                command.execute();
                 client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                          tank.getYposition(),tank.getTankID(),tank.getDirection()));
-                
- 
+                        tank.getYposition(), tank.getTankID(), tank.getDirection()));
             }
-            else if(tank.getDirection()==4)
-            {
-                tank.moveLeft();          
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                            tank.getYposition(),tank.getTankID(),tank.getDirection()));
-            }
-        }
-        else if(e.getKeyCode()==RIGHT)
-        {
-            if(tank.getDirection()==1|tank.getDirection()==3)
-            {
-                tank.moveRight();                        
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                           tank.getYposition(),tank.getTankID(),tank.getDirection()));
-                    
-            }
-            else if(tank.getDirection()==2)
-            {
-                tank.moveRight();
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                             tank.getYposition(),tank.getTankID(),tank.getDirection()));
-            }
-        }
-        else if(e.getKeyCode()==UP)
-        {
-            if(tank.getDirection()==2|tank.getDirection()==4)
-            {
-                tank.moveForward();                            
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                          tank.getYposition(),tank.getTankID(),tank.getDirection()));
-                        
-            }
-            else if(tank.getDirection()==1)
-            {
-                tank.moveForward();
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                        tank.getYposition(),tank.getTankID(),tank.getDirection()));
-                            
-            }
-        }
-        else if(e.getKeyCode()==DOWN)
-        {
-            if(tank.getDirection()==2|tank.getDirection()==4)
-            {
-                tank.moveBackward();
-               
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                        tank.getYposition(),tank.getTankID(),tank.getDirection()));
-                            
-            }
-            else if(tank.getDirection()==3)
-            {
-                tank.moveBackward();
-                                    
-                client.sendToServer(new Protocol().UpdatePacket(tank.getXposition(),
-                                tank.getYposition(),tank.getTankID(),tank.getDirection()));
-                                
-            }
-        }
-        else if(e.getKeyCode()==KeyEvent.VK_SPACE)
-        {
-            client.sendToServer(new Protocol().ShotPacket(tank.getTankID()));
-            tank.shot();
         }
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        System.out.println("KeyReleased: " + KeyEvent.getKeyText(keyCode));
+        if (keyStateMap.containsKey(keyCode)) {
+            keyStateMap.put(keyCode, false);
+        }
     }
     
 }

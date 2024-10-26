@@ -24,6 +24,7 @@ public class Tank {
     private int width = 559, height = 473;
     private int lives = 3;
 
+
     public int getLives() {
         return lives;
     }

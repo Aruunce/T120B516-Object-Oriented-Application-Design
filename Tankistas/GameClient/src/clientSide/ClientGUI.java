@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import clientSide.Maps.Map;
+import clientSide.Maps.MapAbstractFactory;
+
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
 {
     private JLabel ipaddressLabel;

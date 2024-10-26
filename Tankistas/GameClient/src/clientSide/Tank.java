@@ -6,6 +6,11 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
+import clientSide.Maps.Map;
+import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
+import clientSide.Maps.SlowingObstacle;
+
 public class Tank {
     
     private Image[] tankImg;

@@ -7,6 +7,10 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+
+import clientSide.Maps.Map;
+import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
 /*
  * Bomb.java
  *

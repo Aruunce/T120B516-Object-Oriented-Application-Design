@@ -1,4 +1,4 @@
-package clientSide;
+package clientSide.Maps;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

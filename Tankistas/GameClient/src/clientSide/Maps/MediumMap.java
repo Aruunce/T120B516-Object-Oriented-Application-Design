@@ -1,4 +1,4 @@
-package clientSide;
+package clientSide.Maps;
 
 
 import java.util.ArrayList;

@@ -1,9 +1,11 @@
-package clientSide;
+package clientSide.Maps;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+
+import clientSide.Position;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

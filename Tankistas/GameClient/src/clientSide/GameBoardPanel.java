@@ -9,6 +9,11 @@ import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import clientSide.Maps.Map;
+import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
+
 import java.util.ArrayList;
 
 public class GameBoardPanel extends JPanel {

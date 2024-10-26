@@ -1,4 +1,4 @@
-
+package clientSide;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,33 +8,29 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-/*
- * ClientGUI.java
- *
- * Created on 21, 2008, 02:26
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+
+import clientSide.Maps.Map;
+import clientSide.Maps.MapAbstractFactory;
 
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
 {
-    
-    /** Creates a new instance of ClientGUI */
     private JLabel ipaddressLabel;
     private JLabel portLabel;
     private static JLabel scoreLabel;
     private JLabel timerLabel;
     private JLabel livesLabel;
+    private JLabel mapLabel;
     
     private JTextField ipaddressText;
     private JTextField portText;
+    private JComboBox<String> mapSelector;
     
     private JButton registerButton;
     
@@ -52,6 +48,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     
     private SoundManger soundManger;
     
+    private Map currentMap;
+    
     public ClientGUI() 
     {
         score=0;
@@ -65,14 +63,14 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         addWindowListener(this);
         registerPanel=new JPanel();
         registerPanel.setBackground(Color.YELLOW);
-        registerPanel.setSize(200,140);
-        registerPanel.setBounds(560,50,200,140);
+        registerPanel.setSize(200,180);
+        registerPanel.setBounds(560,50,200,170);
         registerPanel.setLayout(null);
         
         gameStatusPanel=new JPanel();
         gameStatusPanel.setBackground(Color.YELLOW);
         gameStatusPanel.setSize(200,300);
-        gameStatusPanel.setBounds(560,210,200,311);
+        gameStatusPanel.setBounds(560,250,200,271);
         gameStatusPanel.setLayout(null);
      
         ipaddressLabel=new JLabel("IP address: ");
@@ -80,6 +78,9 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         
         portLabel=new JLabel("Port: ");
         portLabel.setBounds(10,55,50,25);
+        
+        mapLabel = new JLabel("Map Size: ");
+        mapLabel.setBounds(10, 85, 70, 25);
         
         scoreLabel=new JLabel("Score : 0");
         scoreLabel.setBounds(10,55,100,25);
@@ -93,9 +94,35 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         
         portText=new JTextField("11111");
         portText.setBounds(90,55,100,25);
+        
+        
+        String[] mapSizes = {"Level 1", "Level 2", "Level 3"};
+        mapSelector = new JComboBox<>(mapSizes);
+        mapSelector.setBounds(90, 85, 100, 25);
+        mapSelector.addActionListener(e -> {
+            String selectedSize = (String) mapSelector.getSelectedItem();
+            int mapIndex;
+            switch (selectedSize) {
+                case "Level 1":
+                    mapIndex = 0;
+                    break;
+                case "Level 2":
+                    mapIndex = 1;
+                    break;
+                case "Level 3":
+                    mapIndex = 2;
+                    break;
+                default:
+                    mapIndex = 0;
+            }
+            currentMap = MapAbstractFactory.createMap(mapIndex);
+            if (boardPanel != null) {
+                boardPanel.setMap(currentMap);
+            }
+        });
        
         registerButton=new JButton("Register");
-        registerButton.setBounds(60,100,90,25);
+        registerButton.setBounds(60,130,90,25);
         registerButton.addActionListener(this);
         registerButton.setFocusable(true);
         
@@ -104,6 +131,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         registerPanel.add(portLabel);
         registerPanel.add(ipaddressText);
         registerPanel.add(portText);
+        registerPanel.add(mapSelector);
         registerPanel.add(registerButton);
        
         gameStatusPanel.add(scoreLabel);
@@ -111,9 +139,12 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         gameStatusPanel.add(livesLabel);
             
         client=Client.getGameClient();
-         
+        
         clientTank=new Tank();
-        boardPanel=new GameBoardPanel(clientTank,client,false);
+        currentMap = MapAbstractFactory.createMap(0); // Get default map
+        boardPanel = new GameBoardPanel(clientTank, client, false);
+        
+        //boardPanel=new GameBoardPanel(clientTank,client,false);
         
         getContentPane().add(registerPanel);        
         getContentPane().add(gameStatusPanel);
@@ -133,36 +164,64 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         scoreLabel.setText("Score : "+score);
     }
     
-    public void actionPerformed(ActionEvent e) 
-    {
-        Object obj=e.getSource();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
         
-        if(obj==registerButton)
-        {
+        if (obj == registerButton) {
             registerButton.setEnabled(false);
+            mapSelector.setEnabled(false);  // Disable map selection after registration
             
-            try 
-            {
-                 client.register(ipaddressText.getText(),Integer.parseInt(portText.getText()),clientTank.getXposition(),clientTank.getYposition());
-                 soundManger=new SoundManger();
-                 boardPanel.setGameStatus(true);
-                 boardPanel.repaint();
+            try {
+                // Send selected map info to server
+                String selectedSize = (String) mapSelector.getSelectedItem();
+                int mapIndex;
+                switch (selectedSize) {
+                    case "Level 1":
+                        mapIndex = 0;
+                        break;
+                    case "Level 2":
+                        mapIndex = 1;
+                        break;
+                    case "Level 3":
+                        mapIndex = 2;
+                        break;
+                    default:
+                        mapIndex = 0;
+                }
+                
+                client.register(ipaddressText.getText(), 
+                              Integer.parseInt(portText.getText()),
+                              clientTank.getXposition(),
+                              clientTank.getYposition());
+                              
+                // Send map selection to server
+                client.sendToServer(new Protocol().MapSelectionPacket(mapIndex));
+                
+                soundManger = new SoundManger();
+                boardPanel.setGameStatus(true);
+                boardPanel.repaint();
+                
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
-                 new ClientRecivingThread(client.getSocket()).start();
-                 registerButton.setFocusable(false);
-                 boardPanel.setFocusable(true);
-            } catch (IOException ex) 
-            {
-                JOptionPane.showMessageDialog(this,"The Server is not running, try again later!","Tanks 2D Multiplayer Game",JOptionPane.INFORMATION_MESSAGE);
+                
+                new ClientRecivingThread(client.getSocket()).start();
+                registerButton.setFocusable(false);
+                boardPanel.setFocusable(true);
+                
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this,
+                    "The Server is not running, try again later!",
+                    "Tanks 2D Multiplayer Game",
+                    JOptionPane.INFORMATION_MESSAGE);
                 System.out.println("The Server is not running!");
                 registerButton.setEnabled(true);
+                mapSelector.setEnabled(true);  // Re-enable map selection if registration fails
             }
         }
-        
     }
 
     public void windowOpened(WindowEvent e) 
@@ -207,6 +266,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
             livesLabel.setText("Lives: " + lives);
         });
     }
+    
     
     public class ClientRecivingThread extends Thread
     {
@@ -277,7 +337,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 
                     if(id!=clientTank.getTankID())
                     {
-                        boardPanel.getTank(id).Shot();
+                        boardPanel.getTank(id).shot(false);
                     }
                     
                }
@@ -302,7 +362,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                   
                   if(id==clientTank.getTankID())
                   {
-                        int response=JOptionPane.showConfirmDialog(null,"Sorry, You are loss. Do you want to try again ?","Tanks 2D Multiplayer Game",JOptionPane.OK_CANCEL_OPTION);
+                        int response=JOptionPane.showConfirmDialog(null,"Sorry, You lost. Do you want to try again ?","Tanks 2D Multiplayer Game",JOptionPane.OK_CANCEL_OPTION);
                         if(response==JOptionPane.OK_OPTION)
                         {
                             //client.closeAll();
@@ -321,6 +381,14 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                       boardPanel.removeTank(id);
                   }
                }
+               else if (sentence.startsWith("MapChange")) {
+                    // Format: "MapChange:mapIndex"
+                    int mapIndex = Integer.parseInt(sentence.substring(10));
+                    handleMapChange(mapIndex);
+                }
+                else if (sentence.startsWith("Reset")) {
+                    handleGameReset();
+                }
                else if(sentence.startsWith("Exit"))
                {
                    int id=Integer.parseInt(sentence.substring(4));
@@ -355,6 +423,58 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
             }
             
         }
+        private void handleMapChange(int mapIndex) {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    // Get new map from abstract factory
+                    Map newMap = MapAbstractFactory.createMap(mapIndex);
+                    currentMap = newMap;
+                    
+                    // Update board panel with new map
+                    boardPanel.setMap(newMap);
+                    
+                    // Reset tank positions to valid positions on new map
+                    for (Tank tank : boardPanel.getAllTanks()) {
+                        // Assuming Map class has method to get valid position
+                        Position spawnPos = newMap.getRandomValidPosition();
+                        tank.setXpoistion(spawnPos.x);
+                        tank.setYposition(spawnPos.y);
+                    }
+                    
+                    // Refresh display
+                    boardPanel.repaint();
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(ClientGUI.this, 
+                        "Error loading new map: " + e.getMessage(),
+                        "Map Change Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
+        private void handleGameReset() {
+            SwingUtilities.invokeLater(() -> {
+                // Reset score
+                score = 0;
+                scoreLabel.setText("Score: 0");
+                
+                // Reset lives
+                clientTank.resetLives();
+                updateLivesLabel(clientTank.getLives());
+                
+                // Reset tank positions on current map
+                for (Tank tank : boardPanel.getAllTanks()) {
+                    Position spawnPos = currentMap.getRandomValidPosition();
+                    tank.setXpoistion(spawnPos.x);
+                    tank.setYposition(spawnPos.y);
+                }
+                
+                // Refresh display
+                boardPanel.repaint();
+            });
+        }
+       
     }
     
 }

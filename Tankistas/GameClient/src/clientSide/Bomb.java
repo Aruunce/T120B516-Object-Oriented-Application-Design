@@ -1,9 +1,16 @@
+package clientSide;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+
+import clientSide.Maps.Map;
+import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
 /*
  * Bomb.java
  *
@@ -24,9 +31,12 @@ public class Bomb {
     private int direction;
     public boolean stop=false;
     private float velocityX=0.05f,velocityY=0.05f;
+    private Map currentMap;
     
     public Bomb(int x,int y,int direction) {
-        final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer("boom.wav");
+        
+        String Path = System.getProperty("user.dir") + "/boom.wav";
+        final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer(Path);
         final InputStream stream_boom =new ByteArrayInputStream(sound_boom.getSamples());
         
         int offset = 10;
@@ -49,7 +59,20 @@ public class Bomb {
         yPosi=y;
         this.direction=direction;
         stop=false;
-        bombImg=new ImageIcon("Images/bomb.png").getImage();
+
+
+
+        String imagePath = System.getProperty("user.dir") + "/Images/bomb.png";            
+        File imgFile = new File(imagePath);
+        if (imgFile.exists()) {
+            //System.out.println("Loading image from: " + imgFile.getAbsolutePath());
+            bombImg = new ImageIcon(imgFile.getAbsolutePath()).getImage();
+        } else {
+            System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
+        }
+
+
+        //bombImg=new ImageIcon("Images/bomb.png").getImage();
         
         bombBuffImage=new BufferedImage(bombImg.getWidth(null),bombImg.getHeight(null),BufferedImage.TYPE_INT_RGB);
         bombBuffImage.createGraphics().drawImage(bombImg,0,0,null);
@@ -106,8 +129,9 @@ public class Bomb {
                 }
             }
         }
-
-        for (Obstacle obstacle : Obstacle.getObstacles()) {
+            
+        currentMap = MapAbstractFactory.getCurrentMap();
+        for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
                 return true;
             }
@@ -131,8 +155,8 @@ public class Bomb {
                 }
             }
         }
-        
-        for (Obstacle obstacle : Obstacle.getObstacles()) {
+        currentMap = MapAbstractFactory.getCurrentMap();
+        for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
                 return true;
             }

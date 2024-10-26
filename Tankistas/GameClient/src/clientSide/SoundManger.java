@@ -1,3 +1,5 @@
+package clientSide;
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
@@ -7,6 +9,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ImageIcon;
 /*
  * SoundManger.java
  *
@@ -20,7 +23,8 @@ public class SoundManger {
     AudioFormat audioFormat;
     AudioInputStream audioInputStream;
     SourceDataLine sourceDataLine;
-    String X="start.wav";
+
+    String X = System.getProperty("user.dir") + "/start.wav";
         
     public SoundManger()
     {

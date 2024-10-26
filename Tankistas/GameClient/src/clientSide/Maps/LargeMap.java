@@ -1,42 +1,24 @@
-import java.awt.Graphics2D;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import java.awt.geom.Rectangle2D;
+package clientSide.Maps;
+
+
 import java.util.ArrayList;
 
-public class Obstacle {
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 
-    private int x, y, width, height;
-    private Image image;
-    private static ArrayList<Obstacle> obstacles = obstaclesCoords();
-
-    public Obstacle(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.width = 40;
-        this.height = 40;
-        this.image = new ImageIcon("Images/obstacle.png").getImage();
+public class LargeMap extends Map {
+    private static final int MAP_WIDTH = 609;
+    private static final int MAP_HEIGHT = 523;
+    
+    public LargeMap() {
+        obstacles = createObstacles();
     }
-
-    public static ArrayList<Obstacle> getObstacles() {
-        return obstacles;
-    }
-
-    public void draw(Graphics2D g) {
-        g.drawImage(image, x, y, width, height, null);
-    }
-
-    public boolean collidesWith(int objX, int objY, int objWidth, int objHeight) {
-        Rectangle2D obstacleRect = new Rectangle2D.Float(x, y, width, height);
-        Rectangle2D objRect = new Rectangle2D.Float(objX, objY, objWidth, objHeight);
-
-        return obstacleRect.intersects(objRect);
-    }
-
-    public static ArrayList<Obstacle> obstaclesCoords() {
+    
+    @Override
+    public ArrayList<Obstacle> createObstacles() {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
-
-        // corner top left
         obstacles.add(new Obstacle(124, 100));
         obstacles.add(new Obstacle(124, 140));
         obstacles.add(new Obstacle(164, 100));
@@ -64,7 +46,16 @@ public class Obstacle {
         obstacles.add(new Obstacle(394, 205));
         obstacles.add(new Obstacle(214, 338));
         obstacles.add(new Obstacle(394, 338));
-
         return obstacles;
+    }
+    
+    @Override
+    public int getWidth() {
+        return MAP_WIDTH;
+    }
+    
+    @Override
+    public int getHeight() {
+        return MAP_HEIGHT;
     }
 }

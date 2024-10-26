@@ -144,10 +144,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         clientTank=new Tank();
         currentMap = MapAbstractFactory.createMap(0); // Get default map
         boardPanel = new GameBoardPanel(clientTank, client, false);
-        
-        inputManager = new InputManager(clientTank);
-        boardPanel.addKeyListener(inputManager);
-        boardPanel.setFocusable(true);
+    
         
         getContentPane().add(registerPanel);        
         getContentPane().add(gameStatusPanel);

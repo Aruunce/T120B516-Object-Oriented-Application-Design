@@ -93,20 +93,20 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         portText.setBounds(90,55,100,25);
         
         
-        String[] mapSizes = {"Small", "Medium", "Large"};
+        String[] mapSizes = {"Level 1", "Level 2", "Level 3"};
         mapSelector = new JComboBox<>(mapSizes);
         mapSelector.setBounds(90, 85, 100, 25);
         mapSelector.addActionListener(e -> {
             String selectedSize = (String) mapSelector.getSelectedItem();
             int mapIndex;
             switch (selectedSize) {
-                case "Small":
+                case "Level 1":
                     mapIndex = 0;
                     break;
-                case "Medium":
+                case "Level 2":
                     mapIndex = 1;
                     break;
-                case "Large":
+                case "Level 3":
                     mapIndex = 2;
                     break;
                 default:
@@ -174,13 +174,13 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 String selectedSize = (String) mapSelector.getSelectedItem();
                 int mapIndex;
                 switch (selectedSize) {
-                    case "Small":
+                    case "Level 1":
                         mapIndex = 0;
                         break;
-                    case "Medium":
+                    case "Level 2":
                         mapIndex = 1;
                         break;
-                    case "Large":
+                    case "Level 3":
                         mapIndex = 2;
                         break;
                     default:

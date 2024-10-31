@@ -45,14 +45,4 @@ public class SmallMap extends Map {
     public int getHeight() {
         return MAP_HEIGHT;
     }
-
-    @Override
-    public SmallMap makeCopy() {
-        try {
-            return (SmallMap) this.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-            return this;
-        }
-    }
 }

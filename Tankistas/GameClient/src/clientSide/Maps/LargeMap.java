@@ -14,7 +14,7 @@ public class LargeMap extends Map {
     
     public LargeMap() {
         MediumMap mediumMap = new MediumMap();
-        MediumMap clonedMediumMap = mediumMap.makeCopy();
+        MediumMap clonedMediumMap = (MediumMap) mediumMap.makeCopy();
         this.obstacles = clonedMediumMap.getObstacles();
         this.obstacles.addAll(createObstacles());
     }
@@ -38,15 +38,5 @@ public class LargeMap extends Map {
     @Override
     public int getHeight() {
         return MAP_HEIGHT;
-    }
-
-    @Override
-    public LargeMap makeCopy() {
-        try {
-            return (LargeMap) this.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-            return this;
-        }
     }
 }

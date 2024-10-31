@@ -13,7 +13,10 @@ public class MediumMap extends Map {
     private static final int MAP_HEIGHT = 523;
     
     public MediumMap() {
-        obstacles = createObstacles();
+        SmallMap smallMap = new SmallMap();
+        SmallMap clonedSmallMap = smallMap.makeCopy();
+        this.obstacles = clonedSmallMap.getObstacles();
+        this.obstacles.addAll(createObstacles());
     }
     
     @Override
@@ -22,26 +25,17 @@ public class MediumMap extends Map {
         // corner top left
         obstacles.add(new Obstacle(124, 100));
         obstacles.add(new Obstacle(124, 140));
-        obstacles.add(new Obstacle(164, 100));
         // corner top right
         obstacles.add(new Obstacle(484, 100));
         obstacles.add(new Obstacle(484, 140));
-        obstacles.add(new Obstacle(444, 100));
         // corner bottom left
         obstacles.add(new Obstacle(124, 433));
-        obstacles.add(new Obstacle(164, 433));
         obstacles.add(new Obstacle(124, 393));
         // corner bottom right
         obstacles.add(new Obstacle(484, 433));
-        obstacles.add(new Obstacle(444, 433));
         obstacles.add(new Obstacle(484, 393));
         // center
         obstacles.add(new Obstacle(304, 273));
-        // other
-        obstacles.add(new Obstacle(214, 205));
-        obstacles.add(new Obstacle(394, 205));
-        obstacles.add(new Obstacle(214, 338));
-        obstacles.add(new Obstacle(394, 338));
         return obstacles;
     }
     
@@ -53,5 +47,15 @@ public class MediumMap extends Map {
     @Override
     public int getHeight() {
         return MAP_HEIGHT;
+    }
+
+    @Override
+    public MediumMap makeCopy() {
+        try {
+            return (MediumMap) this.clone();
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            return this;
+        }
     }
 }

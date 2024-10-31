@@ -1,18 +1,17 @@
 package clientSide.Maps;
 
 
+import clientSide.Position;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-
-import clientSide.Position;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-public abstract class Map {
+public abstract class Map implements Cloneable {
     protected ArrayList<Obstacle> obstacles;
     private static final int TANK_SIZE = 32; // Standard tank size
     public static final Random random = new Random();
@@ -72,5 +71,14 @@ public abstract class Map {
         }
         
         return true;
+    }
+
+    public Map makeCopy() {
+        try {
+            return (Map) this.clone();
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            return this;
+        }
     }
 }

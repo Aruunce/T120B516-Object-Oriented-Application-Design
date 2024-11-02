@@ -9,11 +9,9 @@ import java.util.ArrayList;
  */
 
 public class SmallMap extends Map {
-    private static final int MAP_WIDTH = 609;
-    private static final int MAP_HEIGHT = 523;
-    
     public SmallMap() {
-        obstacles = createObstacles();
+        super();
+        this.obstacles.addAll(createObstacles());
     }
     
     @Override
@@ -34,15 +32,5 @@ public class SmallMap extends Map {
         obstacles.add(new Obstacle(214, 338));
         obstacles.add(new Obstacle(394, 338));
         return obstacles;
-    }
-    
-    @Override
-    public int getWidth() {
-        return MAP_WIDTH;
-    }
-    
-    @Override
-    public int getHeight() {
-        return MAP_HEIGHT;
     }
 }

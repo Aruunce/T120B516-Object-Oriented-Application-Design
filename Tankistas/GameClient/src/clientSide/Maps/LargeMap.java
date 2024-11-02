@@ -9,14 +9,13 @@ import java.util.ArrayList;
  */
 
 public class LargeMap extends Map {
-    private static final int MAP_WIDTH = 609;
-    private static final int MAP_HEIGHT = 523;
-    
     public LargeMap() {
         MediumMap mediumMap = new MediumMap();
-        MediumMap clonedMediumMap = (MediumMap) mediumMap.makeCopy();
-        this.obstacles = clonedMediumMap.getObstacles();
-        this.obstacles.addAll(createObstacles());
+        Map clonedMap = mediumMap.makeCopy();
+        
+        clonedMap.obstacles.addAll(createObstacles());
+        
+        this.obstacles = clonedMap.getObstacles();
     }
     
     @Override
@@ -28,15 +27,5 @@ public class LargeMap extends Map {
         obstacles.add(new Obstacle(73, 273));
         obstacles.add(new Obstacle(536, 273));
         return obstacles;
-    }
-    
-    @Override
-    public int getWidth() {
-        return MAP_WIDTH;
-    }
-    
-    @Override
-    public int getHeight() {
-        return MAP_HEIGHT;
     }
 }

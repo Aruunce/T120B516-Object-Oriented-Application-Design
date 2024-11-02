@@ -9,14 +9,13 @@ import java.util.ArrayList;
  */
 
 public class MediumMap extends Map {
-    private static final int MAP_WIDTH = 609;
-    private static final int MAP_HEIGHT = 523;
-    
     public MediumMap() {
         SmallMap smallMap = new SmallMap();
-        SmallMap clonedSmallMap = (SmallMap) smallMap.makeCopy();
-        this.obstacles = clonedSmallMap.getObstacles();
-        this.obstacles.addAll(createObstacles());
+        Map clonedMap = smallMap.makeCopy();
+        
+        clonedMap.obstacles.addAll(createObstacles());
+        
+        this.obstacles = clonedMap.getObstacles();
     }
     
     @Override
@@ -37,15 +36,5 @@ public class MediumMap extends Map {
         // center
         obstacles.add(new Obstacle(304, 273));
         return obstacles;
-    }
-    
-    @Override
-    public int getWidth() {
-        return MAP_WIDTH;
-    }
-    
-    @Override
-    public int getHeight() {
-        return MAP_HEIGHT;
     }
 }

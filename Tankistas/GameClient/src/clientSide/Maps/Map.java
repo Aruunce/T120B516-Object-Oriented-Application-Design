@@ -13,12 +13,35 @@ import java.util.Random;
 
 public abstract class Map implements Cloneable {
     protected ArrayList<Obstacle> obstacles;
+    protected int MAP_WIDTH;
+    protected int MAP_HEIGHT;
+    
     private static final int TANK_SIZE = 32; // Standard tank size
     public static final Random random = new Random();
     
     public abstract ArrayList<Obstacle> createObstacles();
-    public abstract int getWidth();
-    public abstract int getHeight();
+    
+    public Map() {
+        this.MAP_WIDTH = 609;
+        this.MAP_HEIGHT = 523;
+        this.obstacles = new ArrayList<>();
+    }
+    
+    public int getWidth() {
+        return MAP_WIDTH;
+    }
+    
+    public int getHeight() {
+        return MAP_HEIGHT;
+    }
+    
+    public void setWidth(int width) {
+        this.MAP_WIDTH = width;
+    }
+
+    public void setHeight(int height) {
+        this.MAP_HEIGHT = height;
+    }
     
     public ArrayList<Obstacle> getObstacles() {
         return obstacles;
@@ -75,7 +98,7 @@ public abstract class Map implements Cloneable {
 
     public Map makeCopy() {
         try {
-            return (Map) this.clone();
+            return (Map) super.clone();
         } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();
             return this;

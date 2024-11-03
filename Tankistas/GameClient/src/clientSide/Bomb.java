@@ -133,6 +133,9 @@ public class Bomb {
         currentMap = MapAbstractFactory.getCurrentMap();
         for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                if (obstacle.isDestructible()) {
+                    currentMap.getObstacles().remove(obstacle);
+                }
                 return true;
             }
         }
@@ -158,6 +161,9 @@ public class Bomb {
         currentMap = MapAbstractFactory.getCurrentMap();
         for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                if (obstacle.isDestructible()) {
+                    currentMap.getObstacles().remove(obstacle);
+                }
                 return true;
             }
         }

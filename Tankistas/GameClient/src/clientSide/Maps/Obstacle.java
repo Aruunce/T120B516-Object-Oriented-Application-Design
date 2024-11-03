@@ -11,16 +11,18 @@ public class Obstacle {
 
     private int x, y, width, height;
     private Image image;
-    private static ArrayList<Obstacle> obstacles = obstaclesCoords();
+    private boolean destructible;
 
+    public Obstacle() {}
+    
     public Obstacle(int x, int y) {
         this.x = x;
         this.y = y;
         this.width = 40;
         this.height = 40;
-        //this.image = new ImageIcon("Images/obstacle.png").getImage();
+        this.destructible = false;
 
-        String imagePath = System.getProperty("user.dir") + "/Images/obstacle.png";            
+        String imagePath = System.getProperty("user.dir") + "/Images/StoneWall.png";            
         File imgFile = new File(imagePath);  // Use File to construct the path
         if (imgFile.exists()) {
             this.image = new ImageIcon(imgFile.getAbsolutePath()).getImage();  // Load image from file
@@ -39,39 +41,33 @@ public class Obstacle {
 
         return obstacleRect.intersects(objRect);
     }
-
-    public static ArrayList<Obstacle> obstaclesCoords() {
-        ArrayList<Obstacle> obstacles = new ArrayList<>();
-
-        //// corner top left
-        //obstacles.add(new Obstacle(124, 100));
-        //obstacles.add(new Obstacle(124, 140));
-        //obstacles.add(new Obstacle(164, 100));
-        //// corner top right
-        //obstacles.add(new Obstacle(484, 100));
-        //obstacles.add(new Obstacle(484, 140));
-        //obstacles.add(new Obstacle(444, 100));
-        //// corner bottom left
-        //obstacles.add(new Obstacle(124, 433));
-        //obstacles.add(new Obstacle(164, 433));
-        //obstacles.add(new Obstacle(124, 393));
-        //// corner bottom right
-        //obstacles.add(new Obstacle(484, 433));
-        //obstacles.add(new Obstacle(444, 433));
-        //obstacles.add(new Obstacle(484, 393));
-        //// edges
-        //obstacles.add(new Obstacle(304, 478));
-        //obstacles.add(new Obstacle(304, 54));
-        //obstacles.add(new Obstacle(73, 273));
-        //obstacles.add(new Obstacle(536, 273));
-        //// center
-        //obstacles.add(new Obstacle(304, 273));
-        //// other
-        //obstacles.add(new Obstacle(214, 205));
-        //obstacles.add(new Obstacle(394, 205));
-        //obstacles.add(new Obstacle(214, 338));
-        //obstacles.add(new Obstacle(394, 338));
-
-        return obstacles;
+    
+    public boolean isDestructible() {
+        return destructible;
+    }
+    
+    public void setSize (int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+    
+    public void setMaterial (String imgPath) {
+        String imagePath = System.getProperty("user.dir") + imgPath;
+        File imgFile = new File(imagePath);
+        
+        if (imgFile.exists()) {
+            this.image = new ImageIcon(imgFile.getAbsolutePath()).getImage();
+        } else {
+            System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
+        }
+    }
+    
+    public void setDestructability (Boolean destructability) {
+        this.destructible = destructability;
+    }
+    
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

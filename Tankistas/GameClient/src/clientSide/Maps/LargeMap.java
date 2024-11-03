@@ -2,6 +2,8 @@ package clientSide.Maps;
 
 
 import java.util.ArrayList;
+import clientSide.Builder.WoodWallBuilder;
+import clientSide.Builder.StoneWallBuilder;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,11 +23,19 @@ public class LargeMap extends Map {
     @Override
     public ArrayList<Obstacle> createObstacles() {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
+        
+        StoneWallBuilder stoneBuilder = new StoneWallBuilder();
+        
         // edges
-        obstacles.add(new Obstacle(304, 478));
-        obstacles.add(new Obstacle(304, 54));
-        obstacles.add(new Obstacle(73, 273));
-        obstacles.add(new Obstacle(536, 273));
+        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setPosition(304, 478);
+        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setPosition(304, 54);
+        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setPosition(73, 273);
+        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setPosition(536, 273);
+        
         return obstacles;
     }
 }

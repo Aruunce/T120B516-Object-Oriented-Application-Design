@@ -1,14 +1,8 @@
+// src/clientSide/Maps/LargeMap.java
 package clientSide.Maps;
 
-
 import java.util.ArrayList;
-import clientSide.Builder.WoodWallBuilder;
 import clientSide.Builder.StoneWallBuilder;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
 public class LargeMap extends Map {
     public LargeMap() {
@@ -26,15 +20,23 @@ public class LargeMap extends Map {
         
         StoneWallBuilder stoneBuilder = new StoneWallBuilder();
         
+        // Use builders to create obstacles
         // edges
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 478);
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 54);
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(73, 273);
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(536, 273);
+        Obstacle stoneWallEdge1 = stoneBuilder.addSize(40, 40).addMaterial("").addDestructability(false).build();
+        stoneWallEdge1.setPosition(304, 478);
+        obstacles.add(stoneWallEdge1);
+
+        Obstacle stoneWallEdge2 = stoneBuilder.addSize(40, 40).addMaterial("").addDestructability(false).build();
+        stoneWallEdge2.setPosition(304, 54);
+        obstacles.add(stoneWallEdge2);
+
+        Obstacle stoneWallEdge3 = stoneBuilder.addSize(40, 40).addMaterial("").addDestructability(false).build();
+        stoneWallEdge3.setPosition(73, 273);
+        obstacles.add(stoneWallEdge3);
+
+        Obstacle stoneWallEdge4 = stoneBuilder.addSize(40, 40).addMaterial("").addDestructability(false).build();
+        stoneWallEdge4.setPosition(536, 273);
+        obstacles.add(stoneWallEdge4);
         
         return obstacles;
     }

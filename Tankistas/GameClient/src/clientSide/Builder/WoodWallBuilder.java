@@ -1,33 +1,38 @@
+// src/clientSide/Builder/WoodWallBuilder.java
 package clientSide.Builder;
 
-public class WoodWallBuilder extends Builder {
-    public void addWood() {
-        obstacle.setMaterial("/Images/WoodWall.png");
+import clientSide.Maps.Obstacle;
+import clientSide.Maps.WoodWall;
+
+public class WoodWallBuilder implements ObstacleBuilder {
+    private Obstacle obstacle;
+
+    public WoodWallBuilder() {
+        this.obstacle = new Obstacle(new WoodWall());
     }
-    
-    public void addPlanks() {
-        obstacle.setSize(35, 35);
-    }
-    
-    public void addFragility() {
-        obstacle.setDestructability(true);
-    }
-    
+
     @Override
-    public Builder addSize (){
-        addPlanks();
+    public ObstacleBuilder addSize(int width, int height) {
+        obstacle.setSize(width, height);
         return this;
     }
-    
+
     @Override
-    public Builder addMaterial() {
-        addWood();
+    public ObstacleBuilder addMaterial(String material) {
+        // Material is already set in WoodWall, so this method can be a no-op
         return this;
     }
-            
+
     @Override
-    public Builder addDestructability() {
-        addFragility();
+    public ObstacleBuilder addDestructability(boolean destructible) {
+        // Destructibility is already set in WoodWall, so this method can be a no-op
         return this;
+    }
+
+    @Override
+    public Obstacle build() {
+        Obstacle builtObstacle = this.obstacle;
+        this.obstacle = new Obstacle(new WoodWall()); // Reset the builder state
+        return builtObstacle;
     }
 }

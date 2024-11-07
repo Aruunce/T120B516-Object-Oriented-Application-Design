@@ -1,33 +1,38 @@
+// src/clientSide/Builder/StoneWallBuilder.java
 package clientSide.Builder;
 
-public class StoneWallBuilder extends Builder {
-    public void addStone() {
-        obstacle.setMaterial("/Images/StoneWall.png");
+import clientSide.Maps.Obstacle;
+import clientSide.Maps.StoneWall;
+
+public class StoneWallBuilder implements ObstacleBuilder {
+    private Obstacle obstacle;
+
+    public StoneWallBuilder() {
+        this.obstacle = new Obstacle(new StoneWall());
     }
-    
-    public void addBricks() {
-        obstacle.setSize(40, 40);
-    }
-    
-    public void addHardness() {
-        obstacle.setDestructability(false);
-    }
-    
+
     @Override
-    public Builder addSize (){
-        addBricks();
+    public ObstacleBuilder addSize(int width, int height) {
+        obstacle.setSize(width, height);
         return this;
     }
-    
+
     @Override
-    public Builder addMaterial() {
-        addStone();
+    public ObstacleBuilder addMaterial(String material) {
+        // Material is already set in StoneWall, so this method can be a no-op
         return this;
     }
-            
+
     @Override
-    public Builder addDestructability() {
-        addHardness();
+    public ObstacleBuilder addDestructability(boolean destructible) {
+        // Destructibility is already set in StoneWall, so this method can be a no-op
         return this;
+    }
+
+    @Override
+    public Obstacle build() {
+        Obstacle builtObstacle = this.obstacle;
+        this.obstacle = new Obstacle(new StoneWall()); // Reset the builder state
+        return builtObstacle;
     }
 }

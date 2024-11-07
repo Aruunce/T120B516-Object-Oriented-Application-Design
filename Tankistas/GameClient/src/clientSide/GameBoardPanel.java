@@ -79,7 +79,6 @@ public class GameBoardPanel extends JPanel {
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
         g.drawString("Tanks 2D Multiplayers Game", 255, 30);
         
-        // Draw obstacles
         if (obstacles != null) {
             for (Obstacle obstacle : obstacles) {
                 if (obstacle != null) {
@@ -161,10 +160,8 @@ public class GameBoardPanel extends JPanel {
         this.currentMap = newMap;
         if (newMap != null) {
             obstacles = newMap.getObstacles();
-            width = newMap.getWidth();
-            height = newMap.getHeight();
-            setSize(width, height);
-            setBounds(-50, 0, width, height);
+        } else {
+            obstacles = new ArrayList<>();
         }
         repaint();
     }

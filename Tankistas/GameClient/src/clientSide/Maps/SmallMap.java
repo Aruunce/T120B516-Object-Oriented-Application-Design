@@ -1,52 +1,40 @@
+// src/clientSide/Maps/SmallMap.java
 package clientSide.Maps;
 
-
 import java.util.ArrayList;
-import clientSide.Builder.WoodWallBuilder;
 import clientSide.Builder.StoneWallBuilder;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+import clientSide.Builder.WoodWallBuilder;
+import clientSide.Builder.SlowingObstacleBuilder;
 
 public class SmallMap extends Map {
-    public SmallMap() {
-        super();
-        this.obstacles.addAll(createObstacles());
-    }
-    
     @Override
     public ArrayList<Obstacle> createObstacles() {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         
+        // Central position for the map
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
+
+        // Use builders to create obstacles
         StoneWallBuilder stoneBuilder = new StoneWallBuilder();
-        
-        // corner top left
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(164, 100);
-        // corner top right
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(444, 100);
-        // corner bottom left
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(164, 433);
-        // corner bottom right
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(444, 433);
-        
         WoodWallBuilder woodBuilder = new WoodWallBuilder();
-        
-        // other
-        obstacles.add(woodBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(214, 205);
-        obstacles.add(woodBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(394, 205);
-        obstacles.add(woodBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(214, 338);
-        obstacles.add(woodBuilder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(394, 338);
-        
+        SlowingObstacleBuilder slowingBuilder = new SlowingObstacleBuilder();
+
+        // Place a stone wall in the center
+        Obstacle stoneWall = stoneBuilder.addSize(40, 40).addMaterial("").addDestructability(false).build();
+        stoneWall.setPosition(centerX - 20, centerY - 20); // Adjusting for obstacle size
+        obstacles.add(stoneWall);
+
+        // Place a wood wall slightly off-center
+        Obstacle woodWall = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
+        woodWall.setPosition(centerX + 60, centerY - 20); // Adjusting for obstacle size
+        obstacles.add(woodWall);
+
+        // Place a slowing obstacle slightly off-center
+        Obstacle slowingObstacle = slowingBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
+        slowingObstacle.setPosition(centerX - 60, centerY - 20); // Adjusting for obstacle size
+        obstacles.add(slowingObstacle);
+
         return obstacles;
     }
 }

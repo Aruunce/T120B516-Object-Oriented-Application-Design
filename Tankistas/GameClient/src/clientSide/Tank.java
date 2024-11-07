@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
-import clientSide.Maps.SlowingObstacle;
+import clientSide.Maps.SlowingObstacleImpl;
 
 public class Tank {
     
@@ -219,50 +219,12 @@ public class Tank {
     }
 
     public boolean checkCollision(int xP, int yP) {
-        ArrayList<Tank> clientTanks = GameBoardPanel.getClients();
-        int x, y;
-
-        if (clientTanks != null) {
-            for (int i = 1; i < clientTanks.size(); i++) {
-                if (clientTanks.get(i) != null) {
-                    x = clientTanks.get(i).getXposition();
-                    y = clientTanks.get(i).getYposition();
-                    if (direction == 1) {       
-                        if (((yP <= y + 43) && yP >= y) && ((xP <= x + 43 && xP >= x) || (xP + 43 >= x && xP + 43 <= x + 43))) { 
-                            return true;
-                        }
-                    } else if (direction == 2) {
-                        if (((xP + 43 >= x) && xP + 43 <= x + 43) && ((yP <= y + 43 && yP >= y) || (yP + 43 >= y && yP + 43 <= y + 43))) { 
-                            return true;
-                        }
-                    } else if (direction == 3) {
-                        if (((yP + 43 >= y) && yP + 43 <= y + 43) && ((xP <= x + 43 && xP >= x) || (xP + 43 >= x && xP + 43 <= x + 43))) { 
-                            return true;
-                        }
-                    } else if (direction == 4) {
-                        if (((xP <= x + 43) && xP >= x) && ((yP <= y + 43 && yP >= y) || (yP + 43 >= y && yP + 43 <= y + 43))) { 
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        int imageWidth = (ImageBuff != null) ? ImageBuff.getWidth() : 43;
-        int imageHeight = (ImageBuff != null) ? ImageBuff.getHeight() : 43;
-
         Map currentMap = MapAbstractFactory.getCurrentMap();
-
         for (Obstacle obstacle : currentMap.getObstacles()) {
-            if (obstacle.collidesWith(xP, yP, imageWidth, imageHeight)) {
-                if (obstacle instanceof SlowingObstacle) {
-                    velocityX *= ((SlowingObstacle) obstacle).getSlowFactor();
-                    velocityY *= ((SlowingObstacle) obstacle).getSlowFactor();
-                }
+            if (obstacle.collidesWith(xP, yP, ImageBuff.getWidth(), ImageBuff.getHeight())) {
                 return true;
             }
         }
-
         return false;
     }
 }

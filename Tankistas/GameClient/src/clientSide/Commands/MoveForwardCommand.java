@@ -11,7 +11,6 @@ public class MoveForwardCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println("MoveForwardCommand");
         tank.moveForward();
     }
 }

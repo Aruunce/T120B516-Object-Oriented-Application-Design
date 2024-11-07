@@ -11,7 +11,6 @@ public class MoveLeftCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println("MoveLeftCommand");
         tank.moveLeft();
     }
 }

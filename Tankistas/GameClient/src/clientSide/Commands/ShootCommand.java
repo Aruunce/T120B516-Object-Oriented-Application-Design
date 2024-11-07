@@ -15,7 +15,6 @@ public class ShootCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println("ShootCommand");
         client.sendToServer(new Protocol().ShotPacket(tank.getTankID()));
         tank.shot();
     }

@@ -29,31 +29,26 @@ public class MediumMap extends Map {
         Obstacle woodWallTopLeft = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
         woodWallTopLeft.setPosition(124, 140);
         obstacles.add(woodWallTopLeft);
-        System.out.println("Added woodWallTopLeft at (124, 140)");
 
         // corner top right
         Obstacle woodWallTopRight = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
         woodWallTopRight.setPosition(489, 140);
         obstacles.add(woodWallTopRight);
-        System.out.println("Added woodWallTopRight at (489, 140)");
 
         // corner bottom left
         Obstacle woodWallBottomLeft = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
         woodWallBottomLeft.setPosition(124, 398);
         obstacles.add(woodWallBottomLeft);
-        System.out.println("Added woodWallBottomLeft at (124, 398)");
 
         // corner bottom right
         Obstacle woodWallBottomRight = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
         woodWallBottomRight.setPosition(489, 398);
         obstacles.add(woodWallBottomRight);
-        System.out.println("Added woodWallBottomRight at (489, 398)");
 
         // center
         Obstacle stoneWallCenter = stoneBuilder.addSize(40, 40).addMaterial("").addDestructability(false).build();
         stoneWallCenter.setPosition(304, 273);
         obstacles.add(stoneWallCenter);
-        System.out.println("Added stoneWallCenter at (304, 273)");
 
         // Print out the list of obstacles
         System.out.println("Obstacles created:");

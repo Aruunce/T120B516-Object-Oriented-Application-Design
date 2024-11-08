@@ -13,4 +13,9 @@ public class MoveBackwardCommand implements Command {
     public void execute() {
         tank.moveBackward();
     }
+    
+    @Override
+    public void undo() {
+        tank.moveForward();
+    }
 }

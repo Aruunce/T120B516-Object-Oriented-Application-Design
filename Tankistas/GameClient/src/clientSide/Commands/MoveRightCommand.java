@@ -13,4 +13,9 @@ public class MoveRightCommand implements Command {
     public void execute() {
         tank.moveRight();
     }
+
+    @Override
+    public void undo() {
+        tank.moveLeft();
+    }
 }

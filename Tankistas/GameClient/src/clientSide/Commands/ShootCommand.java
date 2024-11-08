@@ -18,4 +18,11 @@ public class ShootCommand implements Command {
         client.sendToServer(new Protocol().ShotPacket(tank.getTankID()));
         tank.shot();
     }
+    
+
+    @Override
+    public void undo() {
+        // This is a placeholder 
+        System.out.println("Undo shoot command");
+    }
 }

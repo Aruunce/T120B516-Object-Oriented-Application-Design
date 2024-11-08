@@ -11,6 +11,7 @@ public class ConcreteObstacleFactory implements ObstacleFactory {
     public Obstacle createStoneWall(int x, int y) {
         Obstacle obstacle = new Obstacle(new StoneWall());
         obstacle.setPosition(x, y);
+        obstacle.setSize(40, 40);
         return obstacle;
     }
 
@@ -18,6 +19,7 @@ public class ConcreteObstacleFactory implements ObstacleFactory {
     public Obstacle createWoodWall(int x, int y) {
         Obstacle obstacle = new Obstacle(new WoodWall());
         obstacle.setPosition(x, y);
+        obstacle.setSize(40, 40);
         return obstacle;
     }
 
@@ -25,6 +27,7 @@ public class ConcreteObstacleFactory implements ObstacleFactory {
     public Obstacle createSlowingObstacle(int x, int y) {
         Obstacle obstacle = new Obstacle(new SlowingObstacleImpl());
         obstacle.setPosition(x, y);
+        obstacle.setSize(40, 40);
         return obstacle;
     }
 }

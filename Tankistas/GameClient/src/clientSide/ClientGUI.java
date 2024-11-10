@@ -49,10 +49,11 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private GameBoardPanel boardPanel;
     
     private SoundManger soundManger;
+    private InputManager inputManager;
     
     private Map currentMap;
     private int mapIndex;
-    
+
     public ClientGUI() 
     {
         score=0;
@@ -145,8 +146,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         
         clientTank=new Tank();
         boardPanel = new GameBoardPanel(clientTank, client, false);
-        
-        //boardPanel=new GameBoardPanel(clientTank,client,false);
+    
         
         getContentPane().add(registerPanel);        
         getContentPane().add(gameStatusPanel);

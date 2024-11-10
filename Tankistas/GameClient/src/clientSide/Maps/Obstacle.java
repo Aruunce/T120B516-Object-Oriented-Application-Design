@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Obstacle {
 
-    private int x, y, width, height;
+    private int x, y, width, height, id;
     private Image image;
     private boolean destructible;
 
@@ -69,5 +69,29 @@ public class Obstacle {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+    
+    public void setId(int id ) {
+        this.id = id;
+    }
+    
+    public int getId() {
+        return this.id;
+    }
+    
+    public int getX() {
+        return this.x;
+    }
+    
+    public int getY() {
+        return this.y;
+    }
+    
+    public int getWidth() {
+        return this.width;
+    }
+    
+    public int getHeight() {
+        return this.height;
     }
 }

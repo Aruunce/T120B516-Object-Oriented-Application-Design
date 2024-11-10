@@ -15,13 +15,13 @@ public class LargeMap extends Map {
         MediumMap mediumMap = new MediumMap();
         Map clonedMap = mediumMap.makeCopy();
         
-        clonedMap.obstacles.addAll(createObstacles());
+        clonedMap.obstacles.addAll(createObstacles(clonedMap.obstacles.size()));
         
         this.obstacles = clonedMap.getObstacles();
     }
     
     @Override
-    public ArrayList<Obstacle> createObstacles() {
+    public ArrayList<Obstacle> createObstacles(int size) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         
         Builder builder = new StoneWallBuilder();
@@ -29,12 +29,16 @@ public class LargeMap extends Map {
         // edges
         obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(304, 478);
+        obstacles.get(obstacles.size() - 1).setId(size++);
         obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(304, 54);
+        obstacles.get(obstacles.size() - 1).setId(size++);
         obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(73, 273);
+        obstacles.get(obstacles.size() - 1).setId(size++);
         obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(536, 273);
+        obstacles.get(obstacles.size() - 1).setId(size++);
         
         return obstacles;
     }

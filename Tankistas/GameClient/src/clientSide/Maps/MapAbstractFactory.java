@@ -7,25 +7,22 @@ package clientSide.Maps;
 
 public class MapAbstractFactory {
     private static Map currentMap;
-    private static final Map[] availableMaps = new Map[3];
+    private static int currentMapIndex = 0;
+
+    private static final MapFactory[] mapFactories = {
+        new SmallMapFactory(),
+        new MediumMapFactory(),
+        new LargeMapFactory()
+    };
     
     public static Map createMap(int index) {
-        if (availableMaps[index] == null) {
-            switch (index) {
-                case 0:
-                    availableMaps[index] = new SmallMapFactory().createMap();
-                    break;
-                case 1:
-                    availableMaps[index] = new MediumMapFactory().createMap();
-                    break;
-                case 2:
-                    availableMaps[index] = new LargeMapFactory().createMap();
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid map index");
-            }
+        if (index < 0 || index >= mapFactories.length) {
+            throw new IllegalArgumentException("Invalid map index");
         }
-        currentMap = availableMaps[index];
+
+        currentMapIndex = index;
+        // Create a new map each time to ensure obstacles reset
+        currentMap = mapFactories[index].createMap();
         return currentMap;
     }
     
@@ -34,5 +31,9 @@ public class MapAbstractFactory {
             currentMap = createMap(0); // Default to small map
         }
         return currentMap;
+    }
+    
+    public static int getCurrentMapIndex() {
+        return currentMapIndex;
     }
 }

@@ -1,4 +1,4 @@
-// src/clientSide/Maps/SlowingObstacleImpl.java
+// src/clientSide/Maps/SlowingObstacle.java
 package clientSide.Maps;
 
 import java.awt.Graphics2D;
@@ -6,12 +6,12 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import java.io.File;
 
-public class SlowingObstacleImpl implements ObstacleImpl {
+public class SlowingObstacle implements ObstacleImpl {
     private Image image;
     private boolean destructible;
     private float slowFactor;
 
-    public SlowingObstacleImpl() {
+    public SlowingObstacle() {
         this.destructible = true;
         this.slowFactor = 0.5f; // Example slow factor
         String imagePath = System.getProperty("user.dir") + "/Images/SlowingObstacle.png";            

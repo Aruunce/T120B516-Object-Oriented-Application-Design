@@ -22,13 +22,13 @@ public class MediumMap extends Map {
         WoodWallBuilder woodBuilder = new WoodWallBuilder();
         StoneWallBuilder stoneBuilder = new StoneWallBuilder();
         
-        MapBuilderFacade facade = new MapBuilderFacade();
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
+        // MapBuilderFacade facade = new MapBuilderFacade();
+        // int centerX = getWidth() / 2;
+        // int centerY = getHeight() / 2;
 
         // Place a stone wall in the center
-        Obstacle stoneWall = facade.createStoneWall(centerX - 20, centerY - 20); // Adjusting for obstacle size
-        obstacles.add(stoneWall);
+        // Obstacle stoneWall = facade.createStoneWall(centerX - 20, centerY - 20); // Adjusting for obstacle size
+        // obstacles.add(stoneWall);
 
         // // Use builders to create obstacles
         // // corner top left
@@ -37,9 +37,9 @@ public class MediumMap extends Map {
         obstacles.add(woodWallTopLeft);
 
         // // corner top right
-        // Obstacle woodWallTopRight = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
-        // woodWallTopRight.setPosition(489, 140);
-        // obstacles.add(woodWallTopRight);
+        Obstacle woodWallTopRight = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();
+        woodWallTopRight.setPosition(489, 140);
+        obstacles.add(woodWallTopRight);
 
         // // corner bottom left
         // Obstacle woodWallBottomLeft = woodBuilder.addSize(40, 40).addMaterial("").addDestructability(true).build();

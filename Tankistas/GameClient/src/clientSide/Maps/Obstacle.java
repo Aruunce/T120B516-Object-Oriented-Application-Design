@@ -38,7 +38,7 @@ public class Obstacle {
     }
 
     public boolean isSlowingObstacle() {
-        return impl instanceof SlowingObstacleImpl;
+        return impl instanceof SlowingObstacle;
     }
 
     public float getSlowFactor() {

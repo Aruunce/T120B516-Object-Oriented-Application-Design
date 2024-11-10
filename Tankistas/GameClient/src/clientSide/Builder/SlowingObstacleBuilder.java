@@ -2,13 +2,13 @@
 package clientSide.Builder;
 
 import clientSide.Maps.Obstacle;
-import clientSide.Maps.SlowingObstacleImpl;
+import clientSide.Maps.SlowingObstacle;
 
 public class SlowingObstacleBuilder implements ObstacleBuilder {
     private Obstacle obstacle;
 
     public SlowingObstacleBuilder() {
-        this.obstacle = new Obstacle(new SlowingObstacleImpl());
+        this.obstacle = new Obstacle(new SlowingObstacle());
     }
 
     @Override

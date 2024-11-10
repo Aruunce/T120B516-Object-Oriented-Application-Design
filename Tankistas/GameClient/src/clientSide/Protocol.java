@@ -53,6 +53,17 @@ public class Protocol {
         return message;
     }
     public String MapSelectionPacket(int mapIndex) {
-        return "MapSelect:" + mapIndex;
+        message = "MapSelect:" + mapIndex;
+        return message;
+    }
+    
+    public String DestroyObstaclePacket(int obstacleId) {
+        message="DestroyObstacle:" + obstacleId;
+        return message;
+    }
+    
+    public String InitialMapIndexPacket(int mapIndex) {
+        message = "InitialMapIndex:" + mapIndex;
+        return message;
     }
 }

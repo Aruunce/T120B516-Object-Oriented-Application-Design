@@ -2,8 +2,8 @@ package clientSide.Maps;
 
 
 import java.util.ArrayList;
-import clientSide.Builder.WoodWallBuilder;
 import clientSide.Builder.StoneWallBuilder;
+import clientSide.Builder.Builder;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -15,26 +15,30 @@ public class LargeMap extends Map {
         MediumMap mediumMap = new MediumMap();
         Map clonedMap = mediumMap.makeCopy();
         
-        clonedMap.obstacles.addAll(createObstacles());
+        clonedMap.obstacles.addAll(createObstacles(clonedMap.obstacles.size()));
         
         this.obstacles = clonedMap.getObstacles();
     }
     
     @Override
-    public ArrayList<Obstacle> createObstacles() {
+    public ArrayList<Obstacle> createObstacles(int size) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         
-        StoneWallBuilder stoneBuilder = new StoneWallBuilder();
+        Builder builder = new StoneWallBuilder();
         
         // edges
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(304, 478);
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setId(size++);
+        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(304, 54);
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setId(size++);
+        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(73, 273);
-        obstacles.add(stoneBuilder.addSize().addMaterial().addDestructability().getBuildable());
+        obstacles.get(obstacles.size() - 1).setId(size++);
+        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
         obstacles.get(obstacles.size() - 1).setPosition(536, 273);
+        obstacles.get(obstacles.size() - 1).setId(size++);
         
         return obstacles;
     }

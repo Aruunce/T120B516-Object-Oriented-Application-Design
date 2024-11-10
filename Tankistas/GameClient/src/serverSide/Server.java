@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import clientSide.*;
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
 /*
  * Server.java
  *
@@ -39,6 +40,8 @@ public class Server extends Thread {
     private boolean timerRunning = false;
     
     private Map currentMap;
+    private boolean initialMap = false;
+    private int initialMapIndex;
     
     public Server() throws SocketException 
     {
@@ -51,7 +54,7 @@ public class Server extends Thread {
             ex.printStackTrace();
         }
     }
-        
+  
     public void run()
     {
         Socket clientSocket=null;
@@ -149,7 +152,49 @@ public class Server extends Thread {
                     ex.printStackTrace();
                 }
                 clients.set(id-1,null);
-            }     
+            }    
+            else if(sentence.startsWith("InitialMapIndex"))
+            {
+                int mapIndex = Integer.parseInt(sentence.substring(16));
+
+                if (initialMap==false) {
+                    this.initialMap = true;
+                    this.initialMapIndex = mapIndex;
+                    try {
+                        changeMap(this.initialMapIndex);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    try {
+                        updateMap(this.initialMapIndex);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            } 
+            else if(sentence.startsWith("DestroyObstacle"))
+            {
+                int obstacleId = Integer.parseInt(sentence.substring(16));
+                
+                if (obstacleId >= 0) {
+                    for(Obstacle obstacle : currentMap.getObstacles())
+                    {
+                        if (obstacle.getId() == obstacleId)
+                        {
+                            currentMap.getObstacles().remove(obstacle);
+                            break;
+                        }
+                    }
+                }
+                                
+                String serializedObstacles = serializeObstacles(currentMap.getObstacles());
+                try {
+                    BroadCastMessage(serializedObstacles);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
             else if(sentence.startsWith("Exit"))
             {
                 int id=Integer.parseInt(sentence.substring(4));
@@ -175,20 +220,21 @@ public class Server extends Thread {
     }
     
     public void changeMap(int mapIndex) throws IOException {
-        // Update the map
-        currentMap = MapAbstractFactory.createMap(mapIndex);
-        
-        // Notify all clients about map change
+        this.currentMap = MapAbstractFactory.createMap(mapIndex);
+
         BroadCastMessage("MapChange:" + mapIndex);
-        
-        // Reset the game state
-        resetMatch();
+    }
+    public void updateMap(int mapIndex) throws IOException {
+        BroadCastMessage("MapUpdate:" + mapIndex);
     }
     
     private void resetMatch() {
         countdownTime = 90;
         clients.clear();
         timerRunning = false;
+        initialMap = false;
+        
+        currentMap = null;
         
         try {
             BroadCastMessage("Reset");
@@ -306,4 +352,16 @@ public class Server extends Thread {
         }
     }
     
+    public String serializeObstacles(ArrayList<Obstacle> obstacles) {
+        StringBuilder serialized = new StringBuilder("Obstacles:");
+        for (Obstacle obstacle : obstacles) {
+            serialized.append(obstacle.getId()).append(",")
+                      .append(obstacle.getX()).append(",")
+                      .append(obstacle.getY()).append(",")
+                      .append(obstacle.getWidth()).append(",")
+                      .append(obstacle.getHeight()).append(",")
+                      .append(obstacle.isDestructible()).append(";");
+        }
+        return serialized.toString();
+    }
 }

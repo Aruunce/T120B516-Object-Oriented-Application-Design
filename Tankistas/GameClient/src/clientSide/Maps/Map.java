@@ -19,7 +19,7 @@ public abstract class Map implements Cloneable {
     private static final int TANK_SIZE = 32; // Standard tank size
     public static final Random random = new Random();
     
-    public abstract ArrayList<Obstacle> createObstacles();
+    public abstract ArrayList<Obstacle> createObstacles(int size);
     
     public Map() {
         this.MAP_WIDTH = 609;
@@ -45,6 +45,11 @@ public abstract class Map implements Cloneable {
     
     public ArrayList<Obstacle> getObstacles() {
         return obstacles;
+    }
+    
+    public void setObstacles(ArrayList<Obstacle> obstacles) {
+        this.obstacles.clear();
+        this.obstacles.addAll(obstacles);
     }
     
     public Position getRandomValidPosition() {

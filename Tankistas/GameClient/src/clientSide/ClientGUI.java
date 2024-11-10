@@ -18,6 +18,8 @@ import javax.swing.SwingUtilities;
 
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
+import java.util.ArrayList;
 
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
 {
@@ -50,6 +52,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private InputManager inputManager;
     
     private Map currentMap;
+    private int mapIndex;
 
     public ClientGUI() 
     {
@@ -142,7 +145,6 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         client=Client.getGameClient();
         
         clientTank=new Tank();
-        currentMap = MapAbstractFactory.createMap(0); // Get default map
         boardPanel = new GameBoardPanel(clientTank, client, false);
     
         
@@ -175,7 +177,6 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
             try {
                 // Send selected map info to server
                 String selectedSize = (String) mapSelector.getSelectedItem();
-                int mapIndex;
                 switch (selectedSize) {
                     case "Level 1":
                         mapIndex = 0;
@@ -194,9 +195,6 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                               Integer.parseInt(portText.getText()),
                               clientTank.getXposition(),
                               clientTank.getYposition());
-                              
-                // Send map selection to server
-                client.sendToServer(new Protocol().MapSelectionPacket(mapIndex));
                 
                 soundManger = new SoundManger();
                 boardPanel.setGameStatus(true);
@@ -299,6 +297,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                     System.out.println("My ID= "+id);
                     
                     boardPanel.registerNewTank(clientTank);
+                    
+                    Client.getGameClient().sendToServer(new Protocol().InitialMapIndexPacket(mapIndex));
                }
                else if(sentence.startsWith("NewClient"))
                {
@@ -314,6 +314,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                }   
                else if(sentence.startsWith("Update"))
                {
+                    //Client.getGameClient().sendToServer(new Protocol().DestroyObstaclePacket(-1)); // LAIKINAI
                     int pos1=sentence.indexOf(',');
                     int pos2=sentence.indexOf('-');
                     int pos3=sentence.indexOf('|');
@@ -382,9 +383,22 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                   }
                }
                else if (sentence.startsWith("MapChange")) {
-                    // Format: "MapChange:mapIndex"
                     int mapIndex = Integer.parseInt(sentence.substring(10));
                     handleMapChange(mapIndex);
+                }
+               else if (sentence.startsWith("MapUpdate")) {
+                   int mapIndex = Integer.parseInt(sentence.substring(10));
+                    handleMapUpdate(mapIndex);
+                }
+               else if (sentence.startsWith("Obstacles:")) {
+                    String obstaclesData = sentence.substring(10);
+                    ArrayList<Obstacle> obstacles = deserializeObstacles(obstaclesData);
+
+                    currentMap.setObstacles(obstacles);
+                    boardPanel.revalidate();
+                    boardPanel.repaint();
+                    
+                    System.out.println("Client received obstacles count: " + obstacles.size());
                 }
                 else if (sentence.startsWith("Reset")) {
                     handleGameReset();
@@ -412,7 +426,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                         System.exit(0);
                     }
                 }
-                      
+         
             }
            
             try {
@@ -453,6 +467,23 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 }
             });
         }
+        private void handleMapUpdate(int mapIndex) {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Map newMap = MapAbstractFactory.createMap(mapIndex);
+                    currentMap = newMap;
+                    
+                    boardPanel.setMap(newMap);
+                    boardPanel.repaint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(ClientGUI.this, 
+                        "Error loading new map: " + e.getMessage(),
+                        "Map Change Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
         private void handleGameReset() {
             SwingUtilities.invokeLater(() -> {
                 // Reset score
@@ -474,7 +505,37 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 boardPanel.repaint();
             });
         }
-       
+        
+        private ArrayList<Obstacle> deserializeObstacles(String data) {
+            ArrayList<Obstacle> obstacles = new ArrayList<>();
+            String[] obstacleData = data.split(";");
+
+            for (String obs : obstacleData) {
+                if (obs.isEmpty()) continue;
+                String[] parts = obs.split(",");
+
+                int id = Integer.parseInt(parts[0]);
+                int x = Integer.parseInt(parts[1]);
+                int y = Integer.parseInt(parts[2]);
+                int width = Integer.parseInt(parts[3]);
+                int height = Integer.parseInt(parts[4]);
+                boolean destructible = Boolean.parseBoolean(parts[5]);
+
+                Obstacle obstacle = new Obstacle();
+                obstacle.setId(id);
+                obstacle.setPosition(x, y);
+                obstacle.setSize(width, height);
+                obstacle.setDestructability(destructible);
+                
+                if(destructible) {
+                    obstacle.setMaterial("/Images/WoodWall.png");
+                } else {
+                    obstacle.setMaterial("/Images/StoneWall.png");
+                }
+
+                obstacles.add(obstacle);
+            }
+            return obstacles;
+        }
     }
-    
 }

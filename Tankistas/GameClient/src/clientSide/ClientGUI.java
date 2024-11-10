@@ -314,7 +314,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                }   
                else if(sentence.startsWith("Update"))
                {
-                    //Client.getGameClient().sendToServer(new Protocol().DestroyObstaclePacket(-1)); // LAIKINAI
+                    Client.getGameClient().sendToServer(new Protocol().DestroyObstaclePacket(-1)); // LAIKINAI
                     int pos1=sentence.indexOf(',');
                     int pos2=sentence.indexOf('-');
                     int pos3=sentence.indexOf('|');

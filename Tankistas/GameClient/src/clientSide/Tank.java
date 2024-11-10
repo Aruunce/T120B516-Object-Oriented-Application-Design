@@ -102,7 +102,7 @@ public class Tank {
         return ImageBuff;
     }
 
-    private void updateTankImage() {
+    public void updateTankImage() {
         if (tankImg[direction - 1] != null) {
             // Update the BufferedImage based on the current direction
             int imgWidth = tankImg[direction - 1].getWidth(null);
@@ -203,6 +203,10 @@ public class Tank {
 
     public Bomb[] getBomb() {
         return bomb;
+    }
+    
+    public int getCurrentBombCount() {
+        return curBomb;
     }
 
     public void setTankID(int id) {

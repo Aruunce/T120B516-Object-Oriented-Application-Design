@@ -79,7 +79,7 @@ public abstract class Map implements Cloneable {
         return spawnZones[0];
     }
     
-    protected boolean isValidPosition(int x, int y) {
+    public boolean isValidPosition(int x, int y) {
         // Check map bounds
         if (x < 0 || x > getWidth() - TANK_SIZE || 
             y < 0 || y > getHeight() - TANK_SIZE) {

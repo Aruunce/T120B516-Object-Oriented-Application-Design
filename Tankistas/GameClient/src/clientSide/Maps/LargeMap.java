@@ -2,8 +2,7 @@ package clientSide.Maps;
 
 
 import java.util.ArrayList;
-import clientSide.Builder.StoneWallBuilder;
-import clientSide.Builder.Builder;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -25,13 +24,11 @@ public class LargeMap extends Map {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         ObstacleFacade facade = new ObstacleFacade();
         
-        Builder builder = new StoneWallBuilder();
-        
         // edges
-        facade.addObstacle(obstacles, builder, 304, 478);
-        facade.addObstacle(obstacles, builder, 304, 54);
-        facade.addObstacle(obstacles, builder, 73, 273);
-        facade.addObstacle(obstacles, builder, 536, 273);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 478);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 54);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 73, 273);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 536, 273);
         
         return obstacles;
     }

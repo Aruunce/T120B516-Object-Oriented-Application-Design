@@ -1,14 +1,11 @@
 package clientSide.Maps;
 
 import java.util.ArrayList;
-import clientSide.Builder.Builder;
 
 public class ObstacleFacade {
 
-    public void addObstacle(ArrayList<Obstacle> obstacles, Builder builder, int x, int y) {
-        Obstacle obstacle = builder.addSize().addMaterial().addDestructability().getBuildable();
-        obstacle.setPosition(x, y);
-        obstacle.setId(obstacles.size());
+    public void addObstacle(ArrayList<Obstacle> obstacles, ObstacleType type, int x, int y) {
+        Obstacle obstacle = ObstacleFactory.createObstacle(type, obstacles.size(), x, y, -1, -1, type != ObstacleType.STONE);
         obstacles.add(obstacle);
     }
 

@@ -30,7 +30,9 @@ public class ObstacleFactory {
         Obstacle obstacle = new Obstacle(impl);
         obstacle.setId(id);
         obstacle.setPosition(x, y);
-        obstacle.setSize(width, height);
+        if (width != -1 && height != -1) {
+            obstacle.setSize(width, height);
+        }
         obstacle.setDestructability(destructible);
         obstacle.setMaterial(MATERIAL_PATHS.get(type));
         

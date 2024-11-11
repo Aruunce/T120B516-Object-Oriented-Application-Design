@@ -2,9 +2,6 @@ package clientSide.Maps;
 
 
 import java.util.ArrayList;
-import clientSide.Builder.WoodWallBuilder;
-import clientSide.Builder.StoneWallBuilder;
-import clientSide.Builder.Builder;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -26,28 +23,25 @@ public class MediumMap extends Map {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         ObstacleFacade facade = new ObstacleFacade();
 
-        Builder woodBuilder = new WoodWallBuilder();
-        Builder stoneBuilder = new StoneWallBuilder();
-        
         // corner top left
-        facade.addObstacle(obstacles, woodBuilder, 124, 140);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 124, 140);
         // corner top right
-        facade.addObstacle(obstacles, woodBuilder, 489, 140);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 489, 140);
         // corner bottom left
-        facade.addObstacle(obstacles, woodBuilder, 124, 398);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 124, 398);
         // corner bottom right
-        facade.addObstacle(obstacles, woodBuilder, 489, 398);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 489, 398);
         
         // center
-        facade.addObstacle(obstacles, stoneBuilder, 304, 273);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 273);
         // corner top left
-        facade.addObstacle(obstacles, stoneBuilder, 124, 100);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 124, 100);
         // corner top right
-        facade.addObstacle(obstacles, stoneBuilder, 484, 100);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 484, 100);
         // corner bottom left
-        facade.addObstacle(obstacles, stoneBuilder, 124, 433);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 124, 433);
         // corner bottom right
-        facade.addObstacle(obstacles, stoneBuilder, 484, 433);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 484, 433);
         
         return obstacles;
     }

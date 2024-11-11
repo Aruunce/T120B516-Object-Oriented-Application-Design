@@ -23,22 +23,15 @@ public class LargeMap extends Map {
     @Override
     public ArrayList<Obstacle> createObstacles(int size) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
+        ObstacleFacade facade = new ObstacleFacade();
         
         Builder builder = new StoneWallBuilder();
         
         // edges
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 478);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 54);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(73, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(536, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
+        facade.addObstacle(obstacles, builder, 304, 478);
+        facade.addObstacle(obstacles, builder, 304, 54);
+        facade.addObstacle(obstacles, builder, 73, 273);
+        facade.addObstacle(obstacles, builder, 536, 273);
         
         return obstacles;
     }

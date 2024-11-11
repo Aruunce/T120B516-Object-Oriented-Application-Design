@@ -1,33 +1,34 @@
+// src/clientSide/Builder/StoneWallBuilder.java
 package clientSide.Builder;
 
+import clientSide.Maps.ObstacleImpl;
+import clientSide.Maps.StoneObstacle;
+
 public class StoneWallBuilder extends Builder {
-    public void addStone() {
-        obstacle.setMaterial("/Images/StoneWall.png");
-    }
-    
-    public void addBricks() {
-        obstacle.setSize(40, 40);
-    }
-    
-    public void addHardness() {
-        obstacle.setDestructability(false);
+    public StoneWallBuilder() {
+        super(new StoneObstacle());
     }
     
     @Override
-    public Builder addSize (){
-        addBricks();
+    protected ObstacleImpl createImplementation() {
+        return new StoneObstacle();
+    }
+    
+    @Override
+    public Builder addSize() {
+        obstacle.setSize(40, 40);
         return this;
     }
     
     @Override
     public Builder addMaterial() {
-        addStone();
+        obstacle.setMaterial("/Images/StoneWall.png");
         return this;
     }
-            
+    
     @Override
     public Builder addDestructability() {
-        addHardness();
+        obstacle.setDestructability(false);
         return this;
     }
 }

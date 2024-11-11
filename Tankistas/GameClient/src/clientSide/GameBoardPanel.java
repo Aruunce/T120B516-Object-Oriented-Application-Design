@@ -13,24 +13,27 @@ import javax.swing.JPanel;
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
+import clientSide.Maps.ObstacleFacade;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameBoardPanel extends JPanel {
     private Tank tank;
     private int width = 609;
     private int height = 523;
     private static ArrayList<Tank> tanks;
-    private static ArrayList<Obstacle> obstacles;
     private boolean gameStatus;
     private Map currentMap;
+    private final ObstacleFacade obstacleFacade;
     
     public GameBoardPanel(Tank tank, Client client, boolean gameStatus) {
         // Validate tank parameter
         if (tank == null) {
             throw new IllegalArgumentException("Tank cannot be null");
         }
-        
+
+        this.obstacleFacade = new ObstacleFacade();
         this.tank = tank;
         this.gameStatus = gameStatus;
         setSize(width, height);
@@ -44,12 +47,12 @@ public class GameBoardPanel extends JPanel {
             tanks.add(null);
         }
         
-        // Initialize map and obstacles
+        // Initialize map
         this.currentMap = MapAbstractFactory.getCurrentMap();
         if (this.currentMap != null) {
-            this.obstacles = currentMap.getObstacles();
-        } else {
-            this.obstacles = new ArrayList<>();
+            obstacleFacade.initializeMapObstacles(currentMap);
+            setSize(currentMap.getWidth(), currentMap.getHeight());
+            setBounds(-50, 0, currentMap.getWidth(), currentMap.getHeight());
         }
     }
 
@@ -57,7 +60,7 @@ public class GameBoardPanel extends JPanel {
     public void paintComponent(Graphics gr) {
         super.paintComponent(gr);
         Graphics2D g = (Graphics2D)gr;
-        
+        Graphics2D g2d = (Graphics2D) g;
         // Draw background
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -80,12 +83,8 @@ public class GameBoardPanel extends JPanel {
         g.drawString("Tanks 2D Multiplayers Game", 255, 30);
         
         // Draw obstacles
-        if (obstacles != null) {
-            for (Obstacle obstacle : obstacles) {
-                if (obstacle != null) {
-                    obstacle.draw(g);
-                }
-            }
+        if (currentMap != null) {
+            obstacleFacade.drawObstacles(g2d);
         }
         
         if (gameStatus) {
@@ -143,6 +142,10 @@ public class GameBoardPanel extends JPanel {
         return id >= 0 && id < tanks.size() ? tanks.get(id) : null;
     }
     
+    public List<Obstacle> getObstacles() {
+        return obstacleFacade.getObstacles();
+    }
+
     public ArrayList<Tank> getAllTanks() {
         ArrayList<Tank> activeTanks = new ArrayList<>();
         for (Tank t : tanks) {
@@ -160,11 +163,9 @@ public class GameBoardPanel extends JPanel {
     public void setMap(Map newMap) {
         this.currentMap = newMap;
         if (newMap != null) {
-            obstacles = newMap.getObstacles();
-            width = newMap.getWidth();
-            height = newMap.getHeight();
-            setSize(width, height);
-            setBounds(-50, 0, width, height);
+            obstacleFacade.initializeMapObstacles(newMap);
+            setSize(newMap.getWidth(), newMap.getHeight());
+            setBounds(-50, 0, newMap.getWidth(), newMap.getHeight());
         }
         repaint();
     }

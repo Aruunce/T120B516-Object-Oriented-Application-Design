@@ -1,4 +1,4 @@
-// src/clientSide/SlowingObstacleImpl.java
+// src/clientSide/WoodObstacleImpl.java
 package clientSide.Maps;
 
 import java.awt.Graphics2D;
@@ -7,17 +7,15 @@ import javax.swing.ImageIcon;
 
 import java.io.File;
 
-public class SlowingObstacle implements ObstacleImpl {
+public class WoodObstacle implements ObstacleImpl {
     private Image image;
     private int width, height;
     private boolean destructible;
-    private float slowFactor;
 
-    public SlowingObstacle() {
-        setMaterial("/Images/SlowingTrap.png");
+    public WoodObstacle() {
+        setMaterial("/Images/WoodWall.png");
         setSize(35, 35);
         setDestructible(true);
-        this.slowFactor = 0.5f;
     }
 
     @Override
@@ -52,14 +50,7 @@ public class SlowingObstacle implements ObstacleImpl {
         this.destructible = destructible;
     }
 
-    public float getSlowFactor() {
-        return slowFactor;
-    }
-
-    public void setSlowFactor(float slowFactor) {
-        this.slowFactor = slowFactor;
-    }
-
     public int getWidth() { return width; }
+    
     public int getHeight() { return height; }
 }

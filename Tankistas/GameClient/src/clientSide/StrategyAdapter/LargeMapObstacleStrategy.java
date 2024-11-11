@@ -1,95 +1,54 @@
 package clientSide.StrategyAdapter;
 
 import java.util.ArrayList;
-import clientSide.Builder.Builder;
-import clientSide.Builder.StoneWallBuilder;
-import clientSide.Builder.WoodWallBuilder;
 import clientSide.Maps.Obstacle;
+import clientSide.Maps.ObstacleFacade;
+import clientSide.Maps.ObstacleType;
 
 public class LargeMapObstacleStrategy implements ObstacleCreationStrategy {
     @Override
     public ArrayList<Obstacle> createObstacles(int size) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
-        
-        Builder builder = new StoneWallBuilder();
-        
-        // corner top left
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(164, 100);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        // corner top right
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(444, 100);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        // corner bottom left
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(164, 433);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        // corner bottom right
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(444, 433);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        
-        builder = new WoodWallBuilder();
-        
-        // other
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(214, 205);
-        obstacles.get(obstacles.size() - 1).setId(obstacles.size() - 1);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(394, 205);
-        obstacles.get(obstacles.size() - 1).setId(obstacles.size() - 1);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(214, 338);
-        obstacles.get(obstacles.size() - 1).setId(obstacles.size() - 1);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(394, 338);
-        obstacles.get(obstacles.size() - 1).setId(obstacles.size() - 1);
-        
-        //center
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        // corner top left
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(124, 100);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        // corner top right
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(484, 100);
-        obstacles.get(obstacles.size() - 1).setId(size++);      
-        // corner bottom left
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(124, 433);      
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        // corner bottom right
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(484, 433);
-        obstacles.get(obstacles.size() - 1).setId(size++);
+        ObstacleFacade facade = new ObstacleFacade();
 
-        builder = new StoneWallBuilder();
-        
-        // edges
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 478);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 54);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(73, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(536, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        
-        builder = new WoodWallBuilder();
+        // corner top left
+        facade.addObstacle(obstacles, ObstacleType.STONE, 164, 100);
+        // corner top right
+        facade.addObstacle(obstacles, ObstacleType.STONE, 444, 100);
+        // corner bottom left
+        facade.addObstacle(obstacles, ObstacleType.STONE, 164, 433);
+        // corner bottom right
+        facade.addObstacle(obstacles, ObstacleType.STONE, 444, 433);
+
+        // other
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 214, 205);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 394, 205);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 214, 338);
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 394, 338);
+        // corner top left
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 124, 140);
+        // corner top right
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 489, 140);
+        // corner bottom left
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 124, 398);
+        // corner bottom right
+        facade.addObstacle(obstacles, ObstacleType.WOOD, 489, 398);
         
         // center
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 273);
+        // corner top left
+        facade.addObstacle(obstacles, ObstacleType.STONE, 124, 100);
+        // corner top right
+        facade.addObstacle(obstacles, ObstacleType.STONE, 484, 100);
+        // corner bottom left
+        facade.addObstacle(obstacles, ObstacleType.STONE, 124, 433);
+        // corner bottom right
+        facade.addObstacle(obstacles, ObstacleType.STONE, 484, 433);
+        // edges
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 478);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 54);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 73, 273);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 536, 273);
         return obstacles;
     }
 }

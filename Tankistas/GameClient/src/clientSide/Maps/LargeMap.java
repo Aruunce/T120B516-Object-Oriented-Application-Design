@@ -13,4 +13,5 @@ public class LargeMap extends Map {
         setObstacleCreationStrategy(new LargeMapObstacleStrategy());
         this.obstacles.addAll(createObstacles(0));
     }
+
 }

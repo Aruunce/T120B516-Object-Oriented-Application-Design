@@ -2,6 +2,8 @@ package clientSide.Maps;
 
 
 import clientSide.Position;
+import clientSide.StrategyAdapter.ObstacleCreationStrategy;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -15,12 +17,12 @@ public abstract class Map implements Cloneable {
     protected ArrayList<Obstacle> obstacles;
     protected int MAP_WIDTH;
     protected int MAP_HEIGHT;
+    private ObstacleCreationStrategy obstacleCreationStrategy;
+
     
     private static final int TANK_SIZE = 32; // Standard tank size
     public static final Random random = new Random();
-    
-    public abstract ArrayList<Obstacle> createObstacles(int size);
-    
+        
     public Map() {
         this.MAP_WIDTH = 609;
         this.MAP_HEIGHT = 523;
@@ -108,5 +110,16 @@ public abstract class Map implements Cloneable {
             ex.printStackTrace();
             return this;
         }
+    }
+
+    public void setObstacleCreationStrategy(ObstacleCreationStrategy strategy) {
+        this.obstacleCreationStrategy = strategy;
+    }
+
+    public ArrayList<Obstacle> createObstacles(int size) {
+        if (obstacleCreationStrategy != null) {
+            return obstacleCreationStrategy.createObstacles(size);
+        }
+        return new ArrayList<>();
     }
 }

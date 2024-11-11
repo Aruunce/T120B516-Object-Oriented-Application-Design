@@ -8,14 +8,14 @@ import javax.swing.ImageIcon;
 
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
-import clientSide.Maps.Obstacle;
-import clientSide.Maps.SlowingObstacle;
+import clientSide.Maps.ObstacleFacade;
+
 
 public class Tank {
     
     private Image[] tankImg;
     private BufferedImage ImageBuff;
-    private Bomb bomb[] = new Bomb[1000];
+    private Bomb[] bombs = new Bomb[1000];
     private int curBomb = 0;
     private int tankID;
     private int posiX = -1, posiY = -1;
@@ -23,7 +23,7 @@ public class Tank {
     private float velocityX = 0.03125f, velocityY = 0.03125f;
     private int width = 559, height = 473;
     private int lives = 3;
-
+    private final ObstacleFacade obstacleFacade;
 
     public int getLives() {
         return lives;
@@ -47,6 +47,7 @@ public class Tank {
 
     /** Creates a new instance of Tank */
     public Tank() {
+        this.obstacleFacade = new ObstacleFacade();
         Map currentMap = MapAbstractFactory.getCurrentMap();
         do {
             posiX = (int)(Math.random() * currentMap.getWidth());
@@ -57,6 +58,7 @@ public class Tank {
     }
 
     public Tank(int x, int y, int dir, int id) {
+        this.obstacleFacade = new ObstacleFacade();
         posiX = x;
         posiY = y;
         tankID = id;
@@ -196,13 +198,13 @@ public class Tank {
     }
     
     public void shot(boolean startThread) {
-        bomb[curBomb] = new Bomb(this.getXposition(), this.getYposition(), direction);
-        bomb[curBomb].startBombThread(startThread);
+        bombs[curBomb] = new Bomb(this.getXposition(), this.getYposition(), direction, obstacleFacade);
+        bombs[curBomb].startBombThread(true);
         curBomb++;
     }
 
     public Bomb[] getBomb() {
-        return bomb;
+        return bombs;
     }
 
     public void setTankID(int id) {
@@ -253,14 +255,9 @@ public class Tank {
 
         Map currentMap = MapAbstractFactory.getCurrentMap();
 
-        for (Obstacle obstacle : currentMap.getObstacles()) {
-            if (obstacle.collidesWith(xP, yP, imageWidth, imageHeight)) {
-                if (obstacle instanceof SlowingObstacle) {
-                    velocityX *= ((SlowingObstacle) obstacle).getSlowFactor();
-                    velocityY *= ((SlowingObstacle) obstacle).getSlowFactor();
-                }
-                return true;
-            }
+        if (currentMap != null) {
+            obstacleFacade.initializeMapObstacles(currentMap);
+            return obstacleFacade.checkCollision(xP, yP, imageWidth, imageHeight);
         }
 
         return false;

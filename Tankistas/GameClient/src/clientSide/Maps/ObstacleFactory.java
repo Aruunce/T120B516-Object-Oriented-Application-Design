@@ -1,14 +1,16 @@
-// src/clientSide/Maps/ObstacleFactory.java
 package clientSide.Maps;
 
 import java.util.Map;
+import java.util.HashMap;
 
 public class ObstacleFactory {
-    private static final Map<ObstacleType, String> MATERIAL_PATHS = Map.of(
-        ObstacleType.STONE, "/Images/StoneWall.png",
-        ObstacleType.WOOD, "/Images/WoodWall.png",
-        ObstacleType.SLOWING, "/Images/SlowingTrap.png"
-    );
+    private static final Map<ObstacleType, String> MATERIAL_PATHS = new HashMap<>();
+
+    static {
+        MATERIAL_PATHS.put(ObstacleType.STONE, "/Images/StoneWall.png");
+        MATERIAL_PATHS.put(ObstacleType.WOOD, "/Images/WoodWall.png");
+        MATERIAL_PATHS.put(ObstacleType.SLOWING, "/Images/SlowingTrap.png");
+    }
 
     public static Obstacle createObstacle(ObstacleType type, int id, int x, int y, 
                                         int width, int height, boolean destructible) {

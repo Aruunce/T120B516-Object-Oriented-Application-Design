@@ -255,9 +255,10 @@ public class Tank {
 
         for (Obstacle obstacle : currentMap.getObstacles()) {
             if (obstacle.collidesWith(xP, yP, imageWidth, imageHeight)) {
-                if (obstacle instanceof SlowingObstacle) {
-                    velocityX *= ((SlowingObstacle) obstacle).getSlowFactor();
-                    velocityY *= ((SlowingObstacle) obstacle).getSlowFactor();
+                if (obstacle.getImplementation() instanceof SlowingObstacle) {
+                    SlowingObstacle slowingImpl = (SlowingObstacle) obstacle.getImplementation();
+                    velocityX *= slowingImpl.getSlowFactor();
+                    velocityY *= slowingImpl.getSlowFactor();
                 }
                 return true;
             }

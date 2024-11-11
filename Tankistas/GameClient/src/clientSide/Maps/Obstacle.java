@@ -1,97 +1,88 @@
+// src/clientSide/Maps/Obstacle.java
 package clientSide.Maps;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.util.ArrayList;
 
 public class Obstacle {
+    private int x, y;
+    private int width, height;
+    private int id;
+    private final ObstacleImpl implementation;
+    private boolean destroyed = false;
 
-    private int x, y, width, height, id;
-    private Image image;
-    private boolean destructible;
-
-    public Obstacle() {}
-    
-    public Obstacle(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.width = 40;
-        this.height = 40;
-        this.destructible = false;
-
-        String imagePath = System.getProperty("user.dir") + "/Images/StoneWall.png";            
-        File imgFile = new File(imagePath);  // Use File to construct the path
-        if (imgFile.exists()) {
-            this.image = new ImageIcon(imgFile.getAbsolutePath()).getImage();  // Load image from file
-        } else {
-            System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
-        }
+    public Obstacle(ObstacleImpl implementation) {
+        this.implementation = implementation;
+        this.width = implementation.getWidth();
+        this.height = implementation.getHeight();
     }
-    
+
     public void draw(Graphics2D g) {
-        g.drawImage(image, x, y, width, height, null);
+        implementation.draw(g, x, y);
     }
 
-    public boolean collidesWith(int objX, int objY, int objWidth, int objHeight) {
-        Rectangle2D obstacleRect = new Rectangle2D.Float(x, y, width, height);
-        Rectangle2D objRect = new Rectangle2D.Float(objX, objY, objWidth, objHeight);
-
-        return obstacleRect.intersects(objRect);
-    }
-    
-    public boolean isDestructible() {
-        return destructible;
-    }
-    
-    public void setSize (int width, int height) {
+    public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+        implementation.setSize(width, height);
     }
-    
-    public void setMaterial (String imgPath) {
-        String imagePath = System.getProperty("user.dir") + imgPath;
-        File imgFile = new File(imagePath);
-        
-        if (imgFile.exists()) {
-            this.image = new ImageIcon(imgFile.getAbsolutePath()).getImage();
-        } else {
-            System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
-        }
+
+    public void setMaterial(String material) {
+        implementation.setMaterial(material);
     }
-    
-    public void setDestructability (Boolean destructability) {
-        this.destructible = destructability;
+
+    public void setDestructability(boolean destructible) {
+        implementation.setDestructible(destructible);
     }
-    
+
+    public boolean isDestructible() {
+        return implementation.isDestructible();
+    }
+
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    
-    public void setId(int id ) {
+
+    public void setId(int id) {
         this.id = id;
     }
-    
+
     public int getId() {
-        return this.id;
+        return id;
     }
-    
+
     public int getX() {
-        return this.x;
+        return x;
     }
-    
+
     public int getY() {
-        return this.y;
+        return y;
     }
-    
+
     public int getWidth() {
-        return this.width;
+        return width;
     }
-    
+
     public int getHeight() {
-        return this.height;
+        return height;
+    }
+
+    public ObstacleImpl getImplementation() {
+        return implementation;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public boolean collidesWith(int objX, int objY, int objWidth, int objHeight) {
+        return (objX < x + width &&
+                objX + objWidth > x &&
+                objY < y + height &&
+                objY + objHeight > y);
     }
 }

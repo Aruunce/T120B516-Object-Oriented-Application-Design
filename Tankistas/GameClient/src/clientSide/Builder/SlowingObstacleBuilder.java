@@ -1,24 +1,24 @@
-// src/clientSide/Builder/WoodWallBuilder.java
+// src/clientSide/Builder/SlowingObstacleBuilder.java
 package clientSide.Builder;
 
 import clientSide.Maps.ObstacleImpl;
-import clientSide.Maps.WoodObstacle;
+import clientSide.Maps.SlowingObstacle;
 
-public class WoodWallBuilder extends Builder {
-    public WoodWallBuilder() {
-        super(new WoodObstacle());
+public class SlowingObstacleBuilder extends Builder {
+    public SlowingObstacleBuilder() {
+        super(new SlowingObstacle());
     }
     
     @Override
     protected ObstacleImpl createImplementation() {
-        return new WoodObstacle();
+        return new SlowingObstacle();
     }
 
-    public void addWood() {
-        obstacle.setMaterial("/Images/WoodWall.png");
+    public void addSlowEffect() {
+        obstacle.setMaterial("/Images/SlowingTrap.png");
     }
     
-    public void addPlanks() {
+    public void addTrapSize() {
         obstacle.setSize(35, 35);
     }
     
@@ -28,13 +28,13 @@ public class WoodWallBuilder extends Builder {
     
     @Override
     public Builder addSize() {
-        addPlanks();
+        addTrapSize();
         return this;
     }
     
     @Override
     public Builder addMaterial() {
-        addWood();
+        addSlowEffect();
         return this;
     }
             

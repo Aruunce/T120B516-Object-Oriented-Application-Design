@@ -2,8 +2,7 @@ package clientSide.Maps;
 
 
 import java.util.ArrayList;
-import clientSide.Builder.StoneWallBuilder;
-import clientSide.Builder.Builder;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -23,22 +22,13 @@ public class LargeMap extends Map {
     @Override
     public ArrayList<Obstacle> createObstacles(int size) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
-        
-        Builder builder = new StoneWallBuilder();
+        ObstacleFacade facade = new ObstacleFacade();
         
         // edges
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 478);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(304, 54);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(73, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
-        obstacles.add(builder.addSize().addMaterial().addDestructability().getBuildable());
-        obstacles.get(obstacles.size() - 1).setPosition(536, 273);
-        obstacles.get(obstacles.size() - 1).setId(size++);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 478);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 304, 54);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 73, 273);
+        facade.addObstacle(obstacles, ObstacleType.STONE, 536, 273);
         
         return obstacles;
     }

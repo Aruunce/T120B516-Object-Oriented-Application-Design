@@ -19,6 +19,10 @@ import javax.swing.SwingUtilities;
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
+import clientSide.Maps.ObstacleFacade;
+import clientSide.Maps.ObstacleFactory;
+import clientSide.Maps.ObstacleType;
+
 import java.util.ArrayList;
 
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
@@ -507,35 +511,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         }
         
         private ArrayList<Obstacle> deserializeObstacles(String data) {
-            ArrayList<Obstacle> obstacles = new ArrayList<>();
-            String[] obstacleData = data.split(";");
-
-            for (String obs : obstacleData) {
-                if (obs.isEmpty()) continue;
-                String[] parts = obs.split(",");
-
-                int id = Integer.parseInt(parts[0]);
-                int x = Integer.parseInt(parts[1]);
-                int y = Integer.parseInt(parts[2]);
-                int width = Integer.parseInt(parts[3]);
-                int height = Integer.parseInt(parts[4]);
-                boolean destructible = Boolean.parseBoolean(parts[5]);
-
-                Obstacle obstacle = new Obstacle();
-                obstacle.setId(id);
-                obstacle.setPosition(x, y);
-                obstacle.setSize(width, height);
-                obstacle.setDestructability(destructible);
-                
-                if(destructible) {
-                    obstacle.setMaterial("/Images/WoodWall.png");
-                } else {
-                    obstacle.setMaterial("/Images/StoneWall.png");
-                }
-
-                obstacles.add(obstacle);
-            }
-            return obstacles;
+            ObstacleFacade facade = new ObstacleFacade();
+            return facade.createObstacles(data);
         }
     }
 }

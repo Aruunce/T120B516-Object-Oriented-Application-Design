@@ -1,6 +1,7 @@
 package clientSide.Maps;
 
 import clientSide.StrategyAdapter.LargeMapObstacleStrategy;
+import clientSide.StrategyAdapter.LargeMapObstacleStrategyAdapter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -10,7 +11,8 @@ import clientSide.StrategyAdapter.LargeMapObstacleStrategy;
 public class LargeMap extends Map {
     public LargeMap() {
         super();
-        setObstacleCreationStrategy(new LargeMapObstacleStrategy());
+        LargeMapObstacleStrategy largeMapObstacleStrategy = new LargeMapObstacleStrategy();
+        setObstacleCreationStrategy(new LargeMapObstacleStrategyAdapter(largeMapObstacleStrategy));
         this.obstacles.addAll(createObstacles(0));
     }
 

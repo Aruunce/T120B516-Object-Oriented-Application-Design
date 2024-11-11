@@ -5,9 +5,8 @@ import clientSide.Maps.Obstacle;
 import clientSide.Maps.ObstacleFacade;
 import clientSide.Maps.ObstacleType;
 
-public class LargeMapObstacleStrategy implements ObstacleCreationStrategy {
-    @Override
-    public ArrayList<Obstacle> createObstacles(int size) {
+public class LargeMapObstacleStrategy{
+    public ArrayList<Obstacle> generateLargeMapObstacles(int size) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         ObstacleFacade facade = new ObstacleFacade();
 

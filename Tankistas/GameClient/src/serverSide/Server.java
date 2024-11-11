@@ -11,10 +11,6 @@ import clientSide.*;
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
-import clientSide.Maps.ObstacleImpl;
-import clientSide.Maps.SlowingObstacle;
-import clientSide.Maps.StoneObstacle;
-import clientSide.Maps.WoodObstacle;
 /*
  * Server.java
  *
@@ -359,25 +355,12 @@ public class Server extends Thread {
     public String serializeObstacles(ArrayList<Obstacle> obstacles) {
         StringBuilder serialized = new StringBuilder("Obstacles:");
         for (Obstacle obstacle : obstacles) {
-            ObstacleImpl impl = obstacle.getImplementation();
-            String type = "normal";
-            
-            // Determine obstacle type from implementation
-            if (impl instanceof SlowingObstacle) {
-                type = "slowing";
-            } else if (impl instanceof WoodObstacle) {
-                type = "wood";
-            } else if (impl instanceof StoneObstacle) {
-                type = "stone";
-            }
-
             serialized.append(obstacle.getId()).append(",")
-                    .append(obstacle.getX()).append(",")
-                    .append(obstacle.getY()).append(",")
-                    .append(obstacle.getWidth()).append(",")
-                    .append(obstacle.getHeight()).append(",")
-                    .append(obstacle.isDestructible()).append(",")
-                    .append(type).append(";");
+                      .append(obstacle.getX()).append(",")
+                      .append(obstacle.getY()).append(",")
+                      .append(obstacle.getWidth()).append(",")
+                      .append(obstacle.getHeight()).append(",")
+                      .append(obstacle.isDestructible()).append(";");
         }
         return serialized.toString();
     }

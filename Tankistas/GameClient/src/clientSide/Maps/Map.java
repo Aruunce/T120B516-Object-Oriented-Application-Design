@@ -12,23 +12,19 @@ import java.util.Random;
  */
 
 public abstract class Map implements Cloneable {
+    protected ArrayList<Obstacle> obstacles;
     protected int MAP_WIDTH;
     protected int MAP_HEIGHT;
-    protected final ObstacleFacade obstacleFacade;
-
+    
     private static final int TANK_SIZE = 32; // Standard tank size
     public static final Random random = new Random();
     
-    protected abstract void initializeObstacles();
+    public abstract ArrayList<Obstacle> createObstacles(int size);
     
     public Map() {
         this.MAP_WIDTH = 609;
         this.MAP_HEIGHT = 523;
-        this.obstacleFacade = new ObstacleFacade();
-    }
-
-    public ArrayList<Obstacle> getObstacles() {
-        return new ArrayList<>(obstacleFacade.getObstacles());
+        this.obstacles = new ArrayList<>();
     }
     
     public int getWidth() {
@@ -45,6 +41,15 @@ public abstract class Map implements Cloneable {
 
     public void setHeight(int height) {
         this.MAP_HEIGHT = height;
+    }
+    
+    public ArrayList<Obstacle> getObstacles() {
+        return obstacles;
+    }
+    
+    public void setObstacles(ArrayList<Obstacle> obstacles) {
+        this.obstacles.clear();
+        this.obstacles.addAll(obstacles);
     }
     
     public Position getRandomValidPosition() {
@@ -80,11 +85,20 @@ public abstract class Map implements Cloneable {
     }
     
     protected boolean isValidPosition(int x, int y) {
+        // Check map bounds
         if (x < 0 || x > getWidth() - TANK_SIZE || 
             y < 0 || y > getHeight() - TANK_SIZE) {
             return false;
         }
-        return !obstacleFacade.checkCollision(x, y, TANK_SIZE, TANK_SIZE);
+        
+        // Use the existing collision detection from Obstacle class
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.collidesWith(x, y, TANK_SIZE, TANK_SIZE)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     public Map makeCopy() {

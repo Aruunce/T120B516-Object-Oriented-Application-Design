@@ -11,7 +11,6 @@ import javax.swing.ImageIcon;
 import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
-import clientSide.Maps.ObstacleFacade;
 /*
  * Bomb.java
  *
@@ -24,7 +23,6 @@ public class Bomb {
     
     /** Creates a new instance of Bomb */
     
-    private final ObstacleFacade obstacleFacade;
     private Image bombImg;
     private BufferedImage bombBuffImage;
     
@@ -35,8 +33,8 @@ public class Bomb {
     private float velocityX=0.05f,velocityY=0.05f;
     private Map currentMap;
     
-    public Bomb(int x,int y,int direction, ObstacleFacade obstacleFacade) {
-        this.obstacleFacade = obstacleFacade;
+    public Bomb(int x,int y,int direction) {
+        
         String Path = System.getProperty("user.dir") + "/boom.wav";
         final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer(Path);
         final InputStream stream_boom =new ByteArrayInputStream(sound_boom.getSamples());
@@ -105,15 +103,17 @@ public class Bomb {
         return bombBuffImage;
     }
     
-    public boolean checkCollision() {
-        ArrayList<Tank> clientTanks = GameBoardPanel.getClients();
-        int x, y;
-        for (int i = 1; i < clientTanks.size(); i++) {
-            if (clientTanks.get(i) != null) {
-                x = clientTanks.get(i).getXposition();
-                y = clientTanks.get(i).getYposition();
+    public boolean checkCollision() 
+    {
+        ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
+        int x,y;
+        for(int i=1;i<clientTanks.size();i++) {
+            if(clientTanks.get(i)!=null) {
+                x=clientTanks.get(i).getXposition();
+                y=clientTanks.get(i).getYposition();
                 
-                if ((yPosi >= y && yPosi <= y + 43) && (xPosi >= x && xPosi <= x + 43)) {
+                if((yPosi>=y&&yPosi<=y+43)&&(xPosi>=x&&xPosi<=x+43)) 
+                {
                     Client.getGameClient().sendToServer(new Protocol().HitPacket(clientTanks.get(i).getTankID()));
                     
                     ClientGUI.setScore(50);
@@ -129,42 +129,40 @@ public class Bomb {
                 }
             }
         }
-        
-        // Use obstacleFacade to check for obstacle collisions
-        if (obstacleFacade.checkCollision(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
-            Obstacle obstacle = obstacleFacade.getObstacles().stream()
-                .filter(o -> o.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight()))
-                .findFirst()
-                .orElse(null);
-
-            if (obstacle != null && obstacle.isDestructible()) {
-                // Send destroy message to server
-                Client.getGameClient().sendToServer(new Protocol().DestroyObstaclePacket(obstacle.getId()));
-                // Mark obstacle as destroyed locally
-                obstacleFacade.removeObstacle(obstacle.getId());
+            
+        currentMap = MapAbstractFactory.getCurrentMap();
+        for (Obstacle obstacle : currentMap.getObstacles()) {
+            if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                if (obstacle.isDestructible()) {
+                    Client.getGameClient().sendToServer(new Protocol().DestroyObstaclePacket(obstacle.getId()));
+                }
+                return true;
             }
-            return true;
         }
+        
         return false;
     }
     
-    public boolean visualizeCollision() {
-        ArrayList<Tank> clientTanks = GameBoardPanel.getClients();
-        int x, y;
-        for (int i = 1; i < clientTanks.size(); i++) {
-            if (clientTanks.get(i) != null) {
-                x = clientTanks.get(i).getXposition();
-                y = clientTanks.get(i).getYposition();
+    public boolean visualizeCollision() 
+    {
+        ArrayList<Tank>clientTanks=GameBoardPanel.getClients();
+        int x,y;
+        for(int i=1;i<clientTanks.size();i++) {
+            if(clientTanks.get(i)!=null) {
+                x=clientTanks.get(i).getXposition();
+                y=clientTanks.get(i).getYposition();
 
-                if ((yPosi >= y && yPosi <= y + 43) && (xPosi >= x && xPosi <= x + 43)) {
+                if((yPosi>=y&&yPosi<=y+43)&&(xPosi>=x&&xPosi<=x+43)) 
+                {
                     return true;
                 }
             }
         }
-
-        // Use obstacleFacade to check for obstacle collisions
-        if (obstacleFacade.checkCollision(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
-            return true;
+        currentMap = MapAbstractFactory.getCurrentMap();
+        for (Obstacle obstacle : currentMap.getObstacles()) {
+            if (obstacle.collidesWith(xPosi, yPosi, bombBuffImage.getWidth(), bombBuffImage.getHeight())) {
+                return true;
+            }
         }
         
         return false;

@@ -1,19 +1,6 @@
-// src/clientSide/Builder/WoodWallBuilder.java
 package clientSide.Builder;
 
-import clientSide.Maps.ObstacleImpl;
-import clientSide.Maps.WoodObstacle;
-
 public class WoodWallBuilder extends Builder {
-    public WoodWallBuilder() {
-        super(new WoodObstacle());
-    }
-    
-    @Override
-    protected ObstacleImpl createImplementation() {
-        return new WoodObstacle();
-    }
-
     public void addWood() {
         obstacle.setMaterial("/Images/WoodWall.png");
     }
@@ -27,7 +14,7 @@ public class WoodWallBuilder extends Builder {
     }
     
     @Override
-    public Builder addSize() {
+    public Builder addSize (){
         addPlanks();
         return this;
     }

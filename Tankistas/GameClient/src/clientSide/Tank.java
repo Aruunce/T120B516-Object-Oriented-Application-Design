@@ -13,7 +13,7 @@ import clientSide.Maps.SlowingObstacle;
 
 public class Tank {
     
-    private Image[] tankImg;
+    protected Image[] tankImg;
     private BufferedImage ImageBuff;
     private Bomb bomb[] = new Bomb[1000];
     private int curBomb = 0;
@@ -102,7 +102,7 @@ public class Tank {
         return ImageBuff;
     }
 
-    private void updateTankImage() {
+    public void updateTankImage() {
         if (tankImg[direction - 1] != null) {
             // Update the BufferedImage based on the current direction
             int imgWidth = tankImg[direction - 1].getWidth(null);

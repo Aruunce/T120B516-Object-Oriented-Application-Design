@@ -10,6 +10,7 @@ import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
 import clientSide.Maps.SlowingObstacle;
+import java.awt.Graphics2D;
 
 public class Tank {
     
@@ -43,6 +44,12 @@ public class Tank {
 
     public int getDirection() {
         return direction;
+    }
+
+    public void draw(Graphics2D g) {
+        if (ImageBuff != null) {
+            g.drawImage(ImageBuff, posiX, posiY, null);
+        }
     }
 
     /** Creates a new instance of Tank */

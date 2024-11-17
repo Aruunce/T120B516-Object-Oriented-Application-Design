@@ -2,12 +2,71 @@ package test;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import static org.junit.Assert.*;
+import org.junit.runners.Parameterized;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Collection;
+import java.awt.Graphics2D;
+import java.util.Arrays;
+import java.util.Collection;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.*;
+
 import clientSide.*;
 
+@RunWith(Parameterized.class)
 public class TankTest {
     private Tank tank;
+    private int xPosition;
+    private int yPosition;
+
+    public TankTest(int xPosition, int yPosition) {
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+    }
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { 0, 0 },
+            { 100, 100 },
+            { 200, 200 },
+            { 300, 300 },
+            { 400, 400 }
+        });
+    }
+
+    //parameterized test
+    @Test
+    public void testSetXposition() {
+        tank.setXpoistion(xPosition);
+        assertEquals(xPosition, tank.getXposition());
+    }
+
+    //parameterized test
+    @Test
+    public void testSetYposition() {
+        tank.setYposition(yPosition);
+        assertEquals(yPosition, tank.getYposition());
+    }
+
+    // Mock test for draw method using Mockito
+    @Test
+    public void testDraw() {
+        Graphics2D g = mock(Graphics2D.class);
+        
+        tank.updateTankImage();
+        tank.draw(g);
+        
+        verify(g).drawImage(any(), eq(tank.getXposition()), eq(tank.getYposition()), isNull());
+    }
+
 
     @Before
     public void setUp() {
@@ -127,19 +186,19 @@ public class TankTest {
         assertEquals(initialBombCount, tank.getCurrentBombCount());
     }
 
-    @Test
-    public void testSetXposition() {
-        int newX = 100;
-        tank.setXpoistion(newX);
-        assertEquals(newX, tank.getXposition());
-    }
+    //@Test
+    //public void testSetXposition() {
+    //    int newX = 100;
+    //    tank.setXpoistion(newX);
+    //    assertEquals(newX, tank.getXposition());
+    // }
 
-    @Test
-    public void testSetYposition() {
-        int newY = 100;
-        tank.setYposition(newY);
-        assertEquals(newY, tank.getYposition());
-    }
+    //@Test
+    //public void testSetYposition() {
+    //    int newY = 100;
+    //    tank.setYposition(newY);
+    //    assertEquals(newY, tank.getYposition());
+    //}
 
     @Test
     public void testGetBuffImage() {

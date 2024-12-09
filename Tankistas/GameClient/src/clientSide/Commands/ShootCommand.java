@@ -15,7 +15,10 @@ public class ShootCommand implements Command {
 
     @Override
     public void execute() {
-        client.sendToServer(new Protocol().ShotPacket(tank.getTankID()));
+        if (tank.getState() == "Healthy" || tank.getState() == "Damaged") {
+            client.sendToServer(new Protocol().ShotPacket(tank.getTankID()));
+        }
+
         tank.shot();
     }
     

@@ -94,7 +94,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         scoreLabel.setBounds(10,55,100,25);
         timerLabel = new JLabel("Time: N/A");
         timerLabel.setBounds(10, 25, 100, 25);
-        livesLabel = new JLabel("Lives: 3");
+        livesLabel = new JLabel("Lives: 4");
         livesLabel.setBounds(10, 85, 100, 25);
         
         ipaddressText=new JTextField("localhost");
@@ -402,7 +402,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                     boardPanel.revalidate();
                     boardPanel.repaint();
                     
-                    System.out.println("Client received obstacles count: " + obstacles.size());
+                    //System.out.println("Client received obstacles count: " + obstacles.size());
                 }
                 else if (sentence.startsWith("Reset")) {
                     handleGameReset();

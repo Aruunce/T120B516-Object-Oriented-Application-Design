@@ -51,7 +51,7 @@ public class Client {
         else
         {
              try {
-                 Socket s=new Socket(hostName,serverPort);
+                Socket s = new Socket(hostName, serverPort);
                  System.out.println(message);
                  writer=new DataOutputStream(s.getOutputStream());
                 writer.writeUTF(message);

@@ -1,5 +1,7 @@
 package clientSide;
 
+
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -22,7 +24,7 @@ import clientSide.Maps.Obstacle;
 public class Bomb {
     
     /** Creates a new instance of Bomb */
-    
+    private final int temp = 10;
     private Image bombImg;
     private BufferedImage bombBuffImage;
     
@@ -33,13 +35,13 @@ public class Bomb {
     private float velocityX=0.05f,velocityY=0.05f;
     private Map currentMap;
     
-    public Bomb(int x,int y,int direction) {
+    public Bomb(int x,int y,int direction, int tankID, int mapNum, int mapID) {
         
         String Path = System.getProperty("user.dir") + "/boom.wav";
         final SimpleSoundPlayer sound_boom =new SimpleSoundPlayer(Path);
         final InputStream stream_boom =new ByteArrayInputStream(sound_boom.getSamples());
         
-        int offset = 10;
+        int offset = temp;
         switch (direction) {
             case 1:
                 y -= offset;
@@ -60,8 +62,6 @@ public class Bomb {
         this.direction=direction;
         stop=false;
 
-
-
         String imagePath = System.getProperty("user.dir") + "/Images/bomb.png";            
         File imgFile = new File(imagePath);
         if (imgFile.exists()) {
@@ -70,9 +70,6 @@ public class Bomb {
         } else {
             System.err.println("Error: Image not found at path: " + imgFile.getAbsolutePath());
         }
-
-
-        //bombImg=new ImageIcon("Images/bomb.png").getImage();
         
         bombBuffImage=new BufferedImage(bombImg.getWidth(null),bombImg.getHeight(null),BufferedImage.TYPE_INT_RGB);
         bombBuffImage.createGraphics().drawImage(bombImg,0,0,null);
@@ -86,7 +83,7 @@ public class Bomb {
     public int getPosiX() {
         return xPosi;
     }
-    public int getPosiY() {
+    public int GetPosiY() {
         return yPosi;
     }
     public void setPosiX(int x) {
@@ -232,8 +229,7 @@ public class Bomb {
                 {
                     yPosi+=30;
                     xPosi+=20;
-                    while(yPosi<505) 
-                    {    
+                    while(yPosi<505) {    
                         yPosi=(int)(yPosi+yPosi*velocityY);
                         if(checkCollision()) 
                         {
@@ -361,5 +357,11 @@ public class Bomb {
                 stop=true;
             }
         }
+    }
+}
+
+
+class testas {
+    public static void main(String[] args) {
     }
 }

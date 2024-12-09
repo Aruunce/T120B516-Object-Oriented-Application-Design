@@ -10,6 +10,7 @@ import clientSide.Maps.Map;
 import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
 import clientSide.Maps.SlowingObstacle;
+import clientSide.State.*;
 
 public class Tank {
     
@@ -22,7 +23,8 @@ public class Tank {
     private int direction = 1;
     private float velocityX = 0.03125f, velocityY = 0.03125f;
     private int width = 559, height = 473;
-    private int lives = 3;
+    private int lives = 4;
+    private TankState state;
 
 
     public int getLives() {
@@ -31,10 +33,11 @@ public class Tank {
 
     public void reduceLives() {
         lives--;
+        updateState();
     }
 
     public void resetLives() {
-        lives = 3;
+        lives = 4;
     }
 
     public boolean isDead() {
@@ -43,6 +46,32 @@ public class Tank {
 
     public int getDirection() {
         return direction;
+    }
+    
+    public String getState() {
+        if (state instanceof HealthyState) {
+            return "Healthy";
+        } else if (state instanceof DamagedState) {
+            return "Damaged";
+        } else if (state instanceof MoveOnlyState) {
+            return "MoveOnly";
+        } else if (state instanceof DestroyedState) {
+            return "Destroyed";
+        }
+        
+        return null;
+    }
+    
+    private void updateState() {
+        if (lives == 4) {
+            state = new HealthyState(this);
+        } else if (lives == 3) {
+            state = new MoveOnlyState(this);
+        } else if (lives == 2) {
+            state = new DamagedState(this);
+        } else {
+            state = new DestroyedState(this);
+        }
     }
 
     /** Creates a new instance of Tank */
@@ -54,6 +83,8 @@ public class Tank {
         } while (posiX < 70 || posiY < 50 || posiY > currentMap.getHeight() - 43 || posiX > currentMap.getWidth() - 43 || checkCollision(posiX, posiY));
 
         loadImage(4);
+        
+        state = new HealthyState(this);
     }
 
     public Tank(int x, int y, int dir, int id) {
@@ -62,6 +93,82 @@ public class Tank {
         tankID = id;
         direction = dir;
         loadImage(0);
+    }
+    
+    public void moveLeft() {
+        state.moveLeft();
+    }
+
+    public void moveRight() {
+        state.moveRight();
+    }
+
+    public void moveForward() {
+        state.moveForward();
+    }
+
+    public void moveBackward() {
+        state.moveBackward();
+    }
+    
+    public void shot() {
+        state.shoot();
+    }
+    
+    public void tankMoveLeft() {
+        if (direction == 1 || direction == 3) {
+            direction = 4;
+            updateTankImage();
+        } else {
+            int temp = (int)(posiX - velocityX * posiX);
+            if (!checkCollision(temp, posiY) && temp < 70) {
+                posiX = 70;
+            } else if (!checkCollision(temp, posiY)) {
+                posiX = temp;
+            }
+        }
+    }
+
+    public void tankMoveRight() {
+        if (direction == 1 || direction == 3) {
+            direction = 2;
+            updateTankImage();
+        } else {       
+            int temp = (int)(posiX + velocityX * posiX);
+            if (!checkCollision(temp, posiY) && temp > width - 43 + 20) {
+                posiX = width - 43 + 20;
+            } else if (!checkCollision(temp, posiY)) {
+                posiX = temp;
+            }
+        }
+    }
+
+    public void tankMoveForward() {
+        if (direction == 2 || direction == 4) {
+            direction = 1;
+            updateTankImage();
+        } else {
+            int temp = (int)(posiY - velocityY * posiY);
+            if (!checkCollision(posiX, temp) && temp < 50) {
+                posiY = 50;
+            } else if (!checkCollision(posiX, temp)) {
+                posiY = temp;
+            }
+        }
+    }
+
+    public void tankMoveBackward() {
+        if (direction == 2 || direction == 4) {
+            direction = 3;
+            updateTankImage();
+        } else {
+            int temp = (int)(posiY + velocityY * posiY);   
+            if (!checkCollision(posiX, temp) && temp > height - 43 + 50) {
+                posiY = height - 43 + 50;
+            } else if (!checkCollision(posiX, temp)) {
+                posiY = temp;
+            }
+        }
     }
 
     public void loadImage(int a) {
@@ -133,66 +240,6 @@ public class Tank {
 
     public void setYposition(int y) {
         posiY = y;
-    }
-
-    public void moveLeft() {
-        if (direction == 1 || direction == 3) {
-            direction = 4;
-            updateTankImage();
-        } else {
-            int temp = (int)(posiX - velocityX * posiX);
-            if (!checkCollision(temp, posiY) && temp < 70) {
-                posiX = 70;
-            } else if (!checkCollision(temp, posiY)) {
-                posiX = temp;
-            }
-        }
-    }
-
-    public void moveRight() {
-        if (direction == 1 || direction == 3) {
-            direction = 2;
-            updateTankImage();
-        } else {       
-            int temp = (int)(posiX + velocityX * posiX);
-            if (!checkCollision(temp, posiY) && temp > width - 43 + 20) {
-                posiX = width - 43 + 20;
-            } else if (!checkCollision(temp, posiY)) {
-                posiX = temp;
-            }
-        }
-    }
-
-    public void moveForward() {
-        if (direction == 2 || direction == 4) {
-            direction = 1;
-            updateTankImage();
-        } else {
-            int temp = (int)(posiY - velocityY * posiY);
-            if (!checkCollision(posiX, temp) && temp < 50) {
-                posiY = 50;
-            } else if (!checkCollision(posiX, temp)) {
-                posiY = temp;
-            }
-        }
-    }
-
-    public void moveBackward() {
-        if (direction == 2 || direction == 4) {
-            direction = 3;
-            updateTankImage();
-        } else {
-            int temp = (int)(posiY + velocityY * posiY);   
-            if (!checkCollision(posiX, temp) && temp > height - 43 + 50) {
-                posiY = height - 43 + 50;
-            } else if (!checkCollision(posiX, temp)) {
-                posiY = temp;
-            }
-        }
-    }
-
-    public void shot() {
-        shot(true);
     }
     
     public void shot(boolean startThread) {

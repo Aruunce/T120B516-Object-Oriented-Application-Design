@@ -1,13 +1,17 @@
 package clientSide.StrategyAdapter;
 
 import java.util.ArrayList;
+
+import clientSide.Iterator.ObstacleCollection;
 import clientSide.Maps.Obstacle;
+import clientSide.Iterator.ObstacleCollection;
+import clientSide.Iterator.Iterator;
 import clientSide.Maps.ObstacleFacade;
 import clientSide.Maps.ObstacleType;
 
 public class SmallMapObstacleStrategy implements ObstacleCreationStrategy {
     @Override
-    public ArrayList<Obstacle> createObstacles(int size) {
+    public ArrayList<Obstacle> createObstacles(int size, ObstacleCollection obstacleCollection) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         ObstacleFacade facade = new ObstacleFacade();
 
@@ -25,6 +29,12 @@ public class SmallMapObstacleStrategy implements ObstacleCreationStrategy {
         facade.addObstacle(obstacles, ObstacleType.WOOD, 394, 205);
         facade.addObstacle(obstacles, ObstacleType.WOOD, 214, 338);
         facade.addObstacle(obstacles, ObstacleType.WOOD, 394, 338);
+
+        for (Obstacle obstacle : obstacles) {
+            obstacleCollection.addObstacle(obstacle);
+        }
+        
         return obstacles;
+        
     }
 }

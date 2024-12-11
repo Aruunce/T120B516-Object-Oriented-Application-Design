@@ -1,12 +1,14 @@
 package clientSide.StrategyAdapter;
 
 import java.util.ArrayList;
+
+import clientSide.Iterator.ObstacleCollection;
 import clientSide.Maps.Obstacle;
 import clientSide.Maps.ObstacleFacade;
 import clientSide.Maps.ObstacleType;
 
 public class LargeMapObstacleStrategy{
-    public ArrayList<Obstacle> generateLargeMapObstacles(int size) {
+    public ArrayList<Obstacle> generateLargeMapObstacles(int size, ObstacleCollection obstacleCollection) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         ObstacleFacade facade = new ObstacleFacade();
 
@@ -48,6 +50,11 @@ public class LargeMapObstacleStrategy{
         facade.addObstacle(obstacles, ObstacleType.STONE, 304, 54);
         facade.addObstacle(obstacles, ObstacleType.STONE, 73, 273);
         facade.addObstacle(obstacles, ObstacleType.STONE, 536, 273);
+
+        for (Obstacle obstacle : obstacles) {
+            obstacleCollection.addObstacle(obstacle);
+        }
+        
         return obstacles;
     }
 }

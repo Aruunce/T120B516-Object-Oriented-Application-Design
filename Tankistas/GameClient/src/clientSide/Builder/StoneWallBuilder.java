@@ -11,24 +11,25 @@ public class StoneWallBuilder extends Builder {
     
     @Override
     protected ObstacleImpl createImplementation() {
+        System.out.println("Creating stone wall implementation");
         return new StoneObstacle();
     }
     
     @Override
-    public Builder addSize() {
+    protected void addSize() {
+        System.out.println("Adding size to stone wall");
         obstacle.setSize(40, 40);
-        return this;
     }
     
     @Override
-    public Builder addMaterial() {
+    protected void addMaterial() {
+        System.out.println("Adding material to stone wall");
         obstacle.setMaterial("/Images/StoneWall.png");
-        return this;
     }
     
     @Override
-    public Builder addDestructability() {
+    protected void addDestructability() {
+        System.out.println("Adding destructability to stone wall");
         obstacle.setDestructability(false);
-        return this;
     }
 }

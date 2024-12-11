@@ -27,20 +27,17 @@ public class WoodWallBuilder extends Builder {
     }
     
     @Override
-    public Builder addSize() {
+    public void addSize() {
         addPlanks();
-        return this;
     }
     
     @Override
-    public Builder addMaterial() {
+    public void addMaterial() {
         addWood();
-        return this;
     }
             
     @Override
-    public Builder addDestructability() {
+    public void addDestructability() {
         addFragility();
-        return this;
     }
 }

@@ -62,6 +62,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private int mapIndex;
     
     private Caretaker ct = new Caretaker();
+    
+    private static boolean isFirstClient = false;
 
     public ClientGUI() 
     {
@@ -143,6 +145,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         gameStateButton.setBounds(10,120,120,25);
         gameStateButton.addActionListener(this);
         gameStateButton.setFocusable(false);
+        gameStateButton.setVisible(false);
         
         registerPanel.add(ipaddressLabel);
         registerPanel.add(portLabel);
@@ -209,6 +212,10 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                               Integer.parseInt(portText.getText()),
                               clientTank.getXposition(),
                               clientTank.getYposition());
+                
+                if (isFirstClient) {
+                    gameStateButton.setVisible(true);
+                }
                 
                 soundManger = new SoundManger();
                 boardPanel.setGameStatus(true);
@@ -342,6 +349,10 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                         }
                     }
                }
+               else if (sentence.startsWith("ShowPauseButton")) {
+                   isFirstClient = true;
+                   gameStateButton.setVisible(true);
+               }
                else if(sentence.startsWith("NewClient"))
                {
                     int pos1=sentence.indexOf(',');
@@ -458,6 +469,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                       updateTimerLabel(sentence);
                }
                else if (sentence.startsWith("GameEnd")) {
+                   isFirstClient = false;
+                   
                     int response = JOptionPane.showConfirmDialog(null, "Time is up! Do you want to play again?", "Tanks 2D Multiplayer Game", JOptionPane.OK_CANCEL_OPTION);
                     if (response == JOptionPane.OK_OPTION) {
                         setVisible(false);
@@ -531,6 +544,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 // Reset score
                 score = 0;
                 scoreLabel.setText("Score: 0");
+                gameStateButton.setVisible(false);
                 
                 // Reset lives
                 clientTank.resetLives();

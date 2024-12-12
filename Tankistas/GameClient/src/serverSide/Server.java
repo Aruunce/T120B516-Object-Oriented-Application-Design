@@ -105,6 +105,14 @@ public class Server extends Thread {
                 
                 clients.add(new ClientInfo(writer,x,y,1));
                 
+                if (clients.size() == 1) {
+                    try {
+                        BroadCastMessage("ShowPauseButton");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                
                 if (clients.size() == 2) {
                     startTimer();
                 }

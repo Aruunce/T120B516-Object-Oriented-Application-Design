@@ -12,7 +12,7 @@ import clientSide.Maps.Obstacle;
 import clientSide.Maps.SlowingObstacle;
 import clientSide.State.*;
 
-public class Tank {
+public class Tank implements Cloneable {
     
     protected Image[] tankImg;
     private BufferedImage ImageBuff;
@@ -24,8 +24,7 @@ public class Tank {
     private float velocityX = 0.03125f, velocityY = 0.03125f;
     private int width = 559, height = 473;
     private int lives = 4;
-    private TankState state;
-
+    private TankState state = new HealthyState(this);
 
     public int getLives() {
         return lives;
@@ -72,6 +71,24 @@ public class Tank {
         } else {
             state = new DestroyedState(this);
         }
+    }
+    
+    public void updateState(String state) {
+        if (state.equals("Healthy")) {
+            this.state = new HealthyState(this);
+        } else if (state.equals("MoveOnly")) {
+            this.state = new MoveOnlyState(this);
+        } else if (state.equals("Damaged")) {
+            this.state = new DamagedState(this);
+        } else {
+            this.state = new DestroyedState(this);
+        }
+    }
+    
+    @Override
+    public Tank clone() throws CloneNotSupportedException {
+        Tank clonedTank = (Tank) super.clone();
+        return clonedTank;
     }
 
     /** Creates a new instance of Tank */

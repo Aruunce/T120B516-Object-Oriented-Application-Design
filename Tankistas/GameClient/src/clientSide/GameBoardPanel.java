@@ -16,6 +16,7 @@ import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
 
 import java.util.ArrayList;
+import clientSide.Memento.GameStateMemento;
 
 public class GameBoardPanel extends JPanel {
     private Tank tank;
@@ -176,5 +177,15 @@ public class GameBoardPanel extends JPanel {
     
     public static ArrayList<Tank> getClients() {
         return tanks;
+    }
+
+    public GameStateMemento saveMemento() {
+        return new GameStateMemento(this.getAllTanks());
+    }
+    
+    public ArrayList<Tank> restoreTanks(GameStateMemento memento){
+        ArrayList<Tank> restoreTanks = memento.restore();
+            
+        return restoreTanks;
     }
 }

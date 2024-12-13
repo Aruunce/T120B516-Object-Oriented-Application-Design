@@ -49,6 +49,8 @@ public class Server extends Thread {
     private boolean initialMap = false;
     private int initialMapIndex;
     
+    private boolean gamePaused = false;
+    
     public Server() throws SocketException 
     {
         clients=new ArrayList<ClientInfo>();
@@ -150,10 +152,12 @@ public class Server extends Thread {
             }
             else if(sentence.startsWith("Hit"))
             {
-                try {
-                    BroadCastMessage(sentence);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                if (!gamePaused) {
+                    try {
+                        BroadCastMessage(sentence);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
             else if(sentence.startsWith("Remove"))
@@ -189,24 +193,26 @@ public class Server extends Thread {
             } 
             else if(sentence.startsWith("DestroyObstacle"))
             {
-                int obstacleId = Integer.parseInt(sentence.substring(16));
-                
-                if (obstacleId >= 0) {
-                    for(Obstacle obstacle : currentMap.getObstacles())
-                    {
-                        if (obstacle.getId() == obstacleId)
+                if (!gamePaused) {
+                    int obstacleId = Integer.parseInt(sentence.substring(16));
+
+                    if (obstacleId >= 0) {
+                        for(Obstacle obstacle : currentMap.getObstacles())
                         {
-                            currentMap.getObstacles().remove(obstacle);
-                            break;
+                            if (obstacle.getId() == obstacleId)
+                            {
+                                currentMap.getObstacles().remove(obstacle);
+                                break;
+                            }
                         }
                     }
-                }
-                                
-                String serializedObstacles = serializeObstacles(currentMap.getObstacles());
-                try {
-                    BroadCastMessage(serializedObstacles);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+
+                    String serializedObstacles = serializeObstacles(currentMap.getObstacles());
+                    try {
+                        BroadCastMessage(serializedObstacles);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
             else if(sentence.startsWith("ChangeGameState"))
@@ -215,6 +221,7 @@ public class Server extends Thread {
 
                 if (state.equalsIgnoreCase("pause")) {
                     stopTimer();
+                    gamePaused = true;
                     
                     try {
                         BroadCastMessage("SaveGameState");
@@ -223,6 +230,7 @@ public class Server extends Thread {
                     }
                 } else if (state.equalsIgnoreCase("unpause")) {
                     startTimer();
+                    gamePaused = false;
                     
                     try {
                         BroadCastMessage("RestoreGameState");

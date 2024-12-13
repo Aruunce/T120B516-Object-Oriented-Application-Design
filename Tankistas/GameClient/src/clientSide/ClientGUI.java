@@ -24,6 +24,8 @@ import clientSide.Maps.ObstacleFactory;
 import clientSide.Maps.ObstacleType;
 
 import java.util.ArrayList;
+import clientSide.Memento.GameStateMemento;
+import clientSide.Memento.Caretaker;
 
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
 {
@@ -39,6 +41,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private JComboBox<String> mapSelector;
     
     private JButton registerButton;
+    private JButton gameStateButton;
     
     
     private JPanel registerPanel;
@@ -57,6 +60,10 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     
     private Map currentMap;
     private int mapIndex;
+    
+    private Caretaker ct = new Caretaker();
+    
+    private static boolean isFirstClient = false;
 
     public ClientGUI() 
     {
@@ -134,7 +141,12 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         registerButton.addActionListener(this);
         registerButton.setFocusable(true);
         
-       
+        gameStateButton=new JButton("Pause game");
+        gameStateButton.setBounds(10,120,120,25);
+        gameStateButton.addActionListener(this);
+        gameStateButton.setFocusable(false);
+        gameStateButton.setVisible(false);
+        
         registerPanel.add(ipaddressLabel);
         registerPanel.add(portLabel);
         registerPanel.add(ipaddressText);
@@ -145,6 +157,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         gameStatusPanel.add(scoreLabel);
         gameStatusPanel.add(timerLabel);
         gameStatusPanel.add(livesLabel);
+        gameStatusPanel.add(gameStateButton);
             
         client=Client.getGameClient();
         
@@ -200,6 +213,10 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                               clientTank.getXposition(),
                               clientTank.getYposition());
                 
+                if (isFirstClient) {
+                    gameStateButton.setVisible(true);
+                }
+                
                 soundManger = new SoundManger();
                 boardPanel.setGameStatus(true);
                 boardPanel.repaint();
@@ -222,6 +239,17 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 System.out.println("The Server is not running!");
                 registerButton.setEnabled(true);
                 mapSelector.setEnabled(true);  // Re-enable map selection if registration fails
+            }
+        }
+        
+        if (obj == gameStateButton) {
+            if (gameStateButton.getText() == "Pause game"){
+                gameStateButton.setText("Unpause game");
+                Client.getGameClient().sendToServer(new Protocol().ChangeGameState("Pause"));
+            }
+            else {
+                gameStateButton.setText("Pause game");
+                Client.getGameClient().sendToServer(new Protocol().ChangeGameState("Unpause"));
             }
         }
     }
@@ -303,6 +331,27 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                     boardPanel.registerNewTank(clientTank);
                     
                     Client.getGameClient().sendToServer(new Protocol().InitialMapIndexPacket(mapIndex));
+               }
+               else if (sentence.startsWith("SaveGameState")) {
+                    GameStateMemento backup = boardPanel.saveMemento();
+                    ct.add(backup);
+
+                    clientTank.updateState("Destroyed");
+               }
+               else if (sentence.startsWith("RestoreGameState")) {
+                    GameStateMemento restoreMemento = ct.get(ct.size() - 1);
+                    
+                    ArrayList<Tank> restoredTanks = boardPanel.restoreTanks(restoreMemento);
+                    
+                    for (Tank tank : restoredTanks) {
+                        if(tank.getTankID() == clientTank.getTankID()) {
+                            clientTank.updateState(tank.getState());
+                        }
+                    }
+               }
+               else if (sentence.startsWith("ShowPauseButton")) {
+                   isFirstClient = true;
+                   gameStateButton.setVisible(true);
                }
                else if(sentence.startsWith("NewClient"))
                {
@@ -420,6 +469,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                       updateTimerLabel(sentence);
                }
                else if (sentence.startsWith("GameEnd")) {
+                   isFirstClient = false;
+                   
                     int response = JOptionPane.showConfirmDialog(null, "Time is up! Do you want to play again?", "Tanks 2D Multiplayer Game", JOptionPane.OK_CANCEL_OPTION);
                     if (response == JOptionPane.OK_OPTION) {
                         setVisible(false);
@@ -493,6 +544,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 // Reset score
                 score = 0;
                 scoreLabel.setText("Score: 0");
+                gameStateButton.setVisible(false);
                 
                 // Reset lives
                 clientTank.resetLives();

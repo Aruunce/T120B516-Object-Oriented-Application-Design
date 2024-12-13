@@ -41,11 +41,15 @@ public class Server extends Thread {
     private boolean running=true;
     
     private int countdownTime = 90;
-    private boolean timerRunning = false;
+    private volatile boolean timerRunning = false;
+    private Thread timerThread;
+    private boolean timerThreadActive = false; 
     
     private Map currentMap;
     private boolean initialMap = false;
     private int initialMapIndex;
+    
+    private boolean gamePaused = false;
     
     public Server() throws SocketException 
     {
@@ -103,6 +107,14 @@ public class Server extends Thread {
                 
                 clients.add(new ClientInfo(writer,x,y,1));
                 
+                if (clients.size() == 1) {
+                    try {
+                        BroadCastMessage("ShowPauseButton");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                
                 if (clients.size() == 2) {
                     startTimer();
                 }
@@ -140,10 +152,12 @@ public class Server extends Thread {
             }
             else if(sentence.startsWith("Hit"))
             {
-                try {
-                    BroadCastMessage(sentence);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                if (!gamePaused) {
+                    try {
+                        BroadCastMessage(sentence);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
             else if(sentence.startsWith("Remove"))
@@ -179,26 +193,54 @@ public class Server extends Thread {
             } 
             else if(sentence.startsWith("DestroyObstacle"))
             {
-                int obstacleId = Integer.parseInt(sentence.substring(16));
-                
-                if (obstacleId >= 0) {
-                    for(Obstacle obstacle : currentMap.getObstacles())
-                    {
-                        if (obstacle.getId() == obstacleId)
+                if (!gamePaused) {
+                    int obstacleId = Integer.parseInt(sentence.substring(16));
+
+                    if (obstacleId >= 0) {
+                        for(Obstacle obstacle : currentMap.getObstacles())
                         {
-                            currentMap.getObstacles().remove(obstacle);
-                            break;
+                            if (obstacle.getId() == obstacleId)
+                            {
+                                currentMap.getObstacles().remove(obstacle);
+                                break;
+                            }
                         }
                     }
-                }
-                                
-                String serializedObstacles = serializeObstacles(currentMap.getObstacles());
-                try {
-                    BroadCastMessage(serializedObstacles);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+
+                    String serializedObstacles = serializeObstacles(currentMap.getObstacles());
+                    try {
+                        BroadCastMessage(serializedObstacles);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
+            else if(sentence.startsWith("ChangeGameState"))
+            {
+                String state = sentence.substring(16).trim();
+
+                if (state.equalsIgnoreCase("pause")) {
+                    stopTimer();
+                    gamePaused = true;
+                    
+                    try {
+                        BroadCastMessage("SaveGameState");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else if (state.equalsIgnoreCase("unpause")) {
+                    startTimer();
+                    gamePaused = false;
+                    
+                    try {
+                        BroadCastMessage("RestoreGameState");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Unknown game state: " + state);
+                }
+            } 
             else if(sentence.startsWith("Exit"))
             {
                 int id=Integer.parseInt(sentence.substring(4));
@@ -247,12 +289,20 @@ public class Server extends Thread {
         }
     }
     
-    public void startTimer() {
+    public synchronized void startTimer() {
+        if (timerThreadActive) {
+            return; // Prevent starting another timer thread
+        }
+
         timerRunning = true;
-        
-        new Thread(() -> {
+        timerThreadActive = true;
+
+        timerThread = new Thread(() -> {
             try {
-                while (countdownTime >= 0 && timerRunning) {
+                while (countdownTime >= 0) {
+                    if (!timerRunning) {
+                        break;
+                    }
                     BroadCastMessage("Time: " + countdownTime);
                     Thread.sleep(1000);
                     countdownTime--;
@@ -261,10 +311,24 @@ public class Server extends Thread {
                     BroadCastMessage("GameEnd");
                     resetMatch();
                 }
-            } catch (InterruptedException | IOException ex) {
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt(); // Restore interrupted status
+            } catch (IOException ex) {
                 ex.printStackTrace();
+            } finally {
+                timerThreadActive = false; // Reset flag when thread exits
             }
-        }).start();
+        });
+
+        timerThread.start();
+    }
+
+    public synchronized void stopTimer() {
+        timerRunning = false;
+
+        if (timerThread != null && timerThread.isAlive()) {
+            timerThread.interrupt(); // Interrupt the thread to exit sleep
+        }
     }
     
     public void stopServer() throws IOException

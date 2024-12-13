@@ -66,4 +66,9 @@ public class Protocol {
         message = "InitialMapIndex:" + mapIndex;
         return message;
     }
+    
+    public String ChangeGameState(String state) {
+        message = "ChangeGameState:" + state;
+        return message;
+    }
 }

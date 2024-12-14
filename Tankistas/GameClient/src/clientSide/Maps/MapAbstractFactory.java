@@ -23,6 +23,7 @@ public class MapAbstractFactory {
         currentMapIndex = index;
         // Create a new map each time to ensure obstacles reset
         currentMap = mapFactories[index].createMap();
+        currentMap.printObstacles();
         return currentMap;
     }
     

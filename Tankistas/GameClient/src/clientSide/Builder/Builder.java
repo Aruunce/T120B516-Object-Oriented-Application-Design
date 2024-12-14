@@ -11,13 +11,21 @@ public abstract class Builder {
         this.obstacle = new Obstacle(implementation);
     }
 
-    public abstract Builder addSize();
-    public abstract Builder addMaterial();
-    public abstract Builder addDestructability();
+    // Template method
+    public final Obstacle build() {
+        addSize();
+        addMaterial();
+        addDestructability();
+        return getBuildable();
+    }
 
+    protected abstract void addSize();
+    protected abstract void addMaterial();
+    protected abstract void addDestructability();
     protected abstract ObstacleImpl createImplementation();
 
     public Obstacle getBuildable() {
+        System.out.println("Building obstacle");
         Obstacle finalObstacle = this.obstacle;
         this.obstacle = new Obstacle(createImplementation());
         return finalObstacle;

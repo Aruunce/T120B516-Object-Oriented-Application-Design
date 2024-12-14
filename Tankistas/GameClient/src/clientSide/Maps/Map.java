@@ -2,6 +2,8 @@ package clientSide.Maps;
 
 
 import clientSide.Position;
+import clientSide.Iterator.Iterator;
+import clientSide.Iterator.ObstacleCollection;
 import clientSide.StrategyAdapter.ObstacleCreationStrategy;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public abstract class Map implements Cloneable {
     protected int MAP_WIDTH;
     protected int MAP_HEIGHT;
     private ObstacleCreationStrategy obstacleCreationStrategy;
+    private ObstacleCollection obstacleCollection;
 
     
     private static final int TANK_SIZE = 32; // Standard tank size
@@ -27,6 +30,7 @@ public abstract class Map implements Cloneable {
         this.MAP_WIDTH = 609;
         this.MAP_HEIGHT = 523;
         this.obstacles = new ArrayList<>();
+        this.obstacleCollection = new ObstacleCollection();
     }
     
     public int getWidth() {
@@ -118,8 +122,16 @@ public abstract class Map implements Cloneable {
 
     public ArrayList<Obstacle> createObstacles(int size) {
         if (obstacleCreationStrategy != null) {
-            return obstacleCreationStrategy.createObstacles(size);
+            return obstacleCreationStrategy.createObstacles(size, obstacleCollection);
         }
         return new ArrayList<>();
+    }
+    
+    public void printObstacles() {
+        Iterator<Obstacle> iterator = obstacleCollection.createIterator();
+        while (iterator.hasNext()) {
+            Obstacle obstacle = iterator.next();
+            System.out.println("Obstacle ID: " + obstacle.getId() + ", Type: " + obstacle.getImplementation().getClass().getSimpleName() + ", Position: (" + obstacle.getX() + ", " + obstacle.getY() + ")");
+        }
     }
 }

@@ -13,11 +13,22 @@ public class SlowingObstacleBuilder extends Builder {
     protected ObstacleImpl createImplementation() {
         return new SlowingObstacle();
     }
-
-    public void addSlowEffect() {
-        obstacle.setMaterial("/Images/SlowingTrap.png");
+    
+    @Override
+    public void addSize() {
+        addTrapSize();
     }
     
+    @Override
+    public void addMaterial() {
+        addSlowEffect();
+    }
+            
+    @Override
+    public void addDestructability() {
+        addFragility();
+    }
+
     public void addTrapSize() {
         obstacle.setSize(35, 35);
     }
@@ -25,22 +36,8 @@ public class SlowingObstacleBuilder extends Builder {
     public void addFragility() {
         obstacle.setDestructability(true);
     }
-    
-    @Override
-    public Builder addSize() {
-        addTrapSize();
-        return this;
-    }
-    
-    @Override
-    public Builder addMaterial() {
-        addSlowEffect();
-        return this;
-    }
-            
-    @Override
-    public Builder addDestructability() {
-        addFragility();
-        return this;
+
+    public void addSlowEffect() {
+        obstacle.setMaterial("/Images/SlowingTrap.png");
     }
 }

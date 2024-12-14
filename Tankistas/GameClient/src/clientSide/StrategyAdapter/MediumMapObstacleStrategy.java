@@ -1,13 +1,15 @@
 package clientSide.StrategyAdapter;
 
 import java.util.ArrayList;
+
+import clientSide.Iterator.ObstacleCollection;
 import clientSide.Maps.Obstacle;
 import clientSide.Maps.ObstacleFacade;
 import clientSide.Maps.ObstacleType;
 
 public class MediumMapObstacleStrategy implements ObstacleCreationStrategy {
     @Override
-    public ArrayList<Obstacle> createObstacles(int size) {
+    public ArrayList<Obstacle> createObstacles(int size, ObstacleCollection obstacleCollection) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         ObstacleFacade facade = new ObstacleFacade();
 
@@ -44,6 +46,11 @@ public class MediumMapObstacleStrategy implements ObstacleCreationStrategy {
         facade.addObstacle(obstacles, ObstacleType.STONE, 124, 433);
         // corner bottom right
         facade.addObstacle(obstacles, ObstacleType.STONE, 484, 433);
+
+        for (Obstacle obstacle : obstacles) {
+            obstacleCollection.addObstacle(obstacle);
+        }
+        
         return obstacles;
     }
 }

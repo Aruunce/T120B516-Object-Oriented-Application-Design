@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 import clientSide.Maps.Map;
@@ -12,8 +14,8 @@ import clientSide.Maps.Obstacle;
 import clientSide.Maps.SlowingObstacle;
 import clientSide.State.*;
 
-public class Tank implements Cloneable {
-    
+public class Tank implements GameElement {
+    private List<Bullet> bullets = new ArrayList<>();
     protected Image[] tankImg;
     private BufferedImage ImageBuff;
     private Bomb bomb[] = new Bomb[1000];
@@ -24,7 +26,28 @@ public class Tank implements Cloneable {
     private float velocityX = 0.03125f, velocityY = 0.03125f;
     private int width = 559, height = 473;
     private int lives = 4;
-    private TankState state = new HealthyState(this);
+    private TankState state;
+    private int bulletDamage = 10; // Default bullet damage
+
+    public Tank() {
+        Map currentMap = MapAbstractFactory.getCurrentMap();
+        do {
+            posiX = (int)(Math.random() * currentMap.getWidth());
+            posiY = (int)(Math.random() * currentMap.getHeight());
+        } while (posiX < 70 || posiY < 50 || posiY > currentMap.getHeight() - 43 || posiX > currentMap.getWidth() - 43 || checkCollision(posiX, posiY));
+
+        loadImage(4);
+        state = new HealthyState(this);
+    }
+
+    public Tank(int x, int y, int dir, int id) {
+        posiX = x;
+        posiY = y;
+        tankID = id;
+        direction = dir;
+        loadImage(0);
+        state = new HealthyState(this);
+    }
 
     public int getLives() {
         return lives;
@@ -46,7 +69,7 @@ public class Tank implements Cloneable {
     public int getDirection() {
         return direction;
     }
-    
+
     public String getState() {
         if (state instanceof HealthyState) {
             return "Healthy";
@@ -57,10 +80,9 @@ public class Tank implements Cloneable {
         } else if (state instanceof DestroyedState) {
             return "Destroyed";
         }
-        
         return null;
     }
-    
+
     private void updateState() {
         if (lives == 4) {
             state = new HealthyState(this);
@@ -72,46 +94,7 @@ public class Tank implements Cloneable {
             state = new DestroyedState(this);
         }
     }
-    
-    public void updateState(String state) {
-        if (state.equals("Healthy")) {
-            this.state = new HealthyState(this);
-        } else if (state.equals("MoveOnly")) {
-            this.state = new MoveOnlyState(this);
-        } else if (state.equals("Damaged")) {
-            this.state = new DamagedState(this);
-        } else {
-            this.state = new DestroyedState(this);
-        }
-    }
-    
-    @Override
-    public Tank clone() throws CloneNotSupportedException {
-        Tank clonedTank = (Tank) super.clone();
-        return clonedTank;
-    }
 
-    /** Creates a new instance of Tank */
-    public Tank() {
-        Map currentMap = MapAbstractFactory.getCurrentMap();
-        do {
-            posiX = (int)(Math.random() * currentMap.getWidth());
-            posiY = (int)(Math.random() * currentMap.getHeight());
-        } while (posiX < 70 || posiY < 50 || posiY > currentMap.getHeight() - 43 || posiX > currentMap.getWidth() - 43 || checkCollision(posiX, posiY));
-
-        loadImage(4);
-        
-        state = new HealthyState(this);
-    }
-
-    public Tank(int x, int y, int dir, int id) {
-        posiX = x;
-        posiY = y;
-        tankID = id;
-        direction = dir;
-        loadImage(0);
-    }
-    
     public void moveLeft() {
         state.moveLeft();
     }
@@ -127,11 +110,11 @@ public class Tank implements Cloneable {
     public void moveBackward() {
         state.moveBackward();
     }
-    
+
     public void shot() {
         state.shoot();
     }
-    
+
     public void tankMoveLeft() {
         if (direction == 1 || direction == 3) {
             direction = 4;
@@ -191,9 +174,7 @@ public class Tank implements Cloneable {
     public void loadImage(int a) {
         tankImg = new Image[4];  // Initialize the tank image array
         for (int i = a; i < tankImg.length + a; i++) {
-
             String imagePath = System.getProperty("user.dir") + "/Images/" + i + ".PNG";  // Correct relative path based on your structure
-            
             File imgFile = new File(imagePath);  // Use File to construct the path
             if (imgFile.exists()) {
                 System.out.println("Loading image from: " + imgFile.getAbsolutePath());
@@ -282,6 +263,21 @@ public class Tank implements Cloneable {
         updateTankImage();
     }
 
+    public void shoot() {
+        Bullet bullet = new Bullet(posiX, posiY, direction);
+        bullet.setDamage(bulletDamage); // Set bullet damage
+        bullets.add(bullet);
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    @Override
+    public void accept(GameElementVisitor visitor) {
+        visitor.visitTank(this);
+    }
+
     public boolean checkCollision(int xP, int yP) {
         ArrayList<Tank> clientTanks = GameBoardPanel.getClients();
         int x, y;
@@ -329,5 +325,27 @@ public class Tank implements Cloneable {
         }
 
         return false;
+    }
+
+    public boolean collidesWith(GameElement element) {
+        if (element instanceof PowerUp) {
+            PowerUp powerUp = (PowerUp) element;
+            return (posiX < powerUp.getX() + 32 &&
+                    posiX + 32 > powerUp.getX() &&
+                    posiY < powerUp.getY() + 32 &&
+                    posiY + 32 > powerUp.getY());
+        }
+        return false;
+    }
+
+    public void collectPowerUp(PowerUp powerUp) {
+        if (powerUp.collidesWith(this)) {
+            powerUp.setCollected(true);
+            powerUp.applyEffect(this); // Apply the effect of the power-up
+        }
+    }
+
+    public void increaseBulletDamage(int amount) {
+        bulletDamage += amount;
     }
 }

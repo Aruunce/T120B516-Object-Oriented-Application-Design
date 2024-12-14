@@ -14,7 +14,7 @@ import clientSide.Maps.Obstacle;
 import clientSide.Maps.SlowingObstacle;
 import clientSide.State.*;
 
-public class Tank implements GameElement {
+public class Tank implements GameElement, Cloneable {
     private List<Bullet> bullets = new ArrayList<>();
     protected Image[] tankImg;
     private BufferedImage ImageBuff;
@@ -55,7 +55,7 @@ public class Tank implements GameElement {
 
     public void reduceLives() {
         lives--;
-        updateState();
+        updateState("Damaged");
     }
 
     public void resetLives() {
@@ -83,15 +83,22 @@ public class Tank implements GameElement {
         return null;
     }
 
-    private void updateState() {
-        if (lives == 4) {
-            state = new HealthyState(this);
-        } else if (lives == 3) {
-            state = new MoveOnlyState(this);
-        } else if (lives == 2) {
-            state = new DamagedState(this);
-        } else {
-            state = new DestroyedState(this);
+    public void updateState(String newState) {
+        switch (newState) {
+            case "Healthy":
+                state = new HealthyState(this);
+                break;
+            case "MoveOnly":
+                state = new MoveOnlyState(this);
+                break;
+            case "Damaged":
+                state = new DamagedState(this);
+                break;
+            case "Destroyed":
+                state = new DestroyedState(this);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown state: " + newState);
         }
     }
 
@@ -347,5 +354,10 @@ public class Tank implements GameElement {
 
     public void increaseBulletDamage(int amount) {
         bulletDamage += amount;
+    }
+
+    @Override
+    public Tank clone() throws CloneNotSupportedException {
+        return (Tank) super.clone();
     }
 }

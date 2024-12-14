@@ -24,6 +24,8 @@ import clientSide.Maps.ObstacleFactory;
 import clientSide.Maps.ObstacleType;
 
 import java.util.ArrayList;
+import clientSide.Memento.GameStateMemento;
+import clientSide.Memento.Caretaker;
 
 public class ClientGUI extends JFrame implements ActionListener,WindowListener 
 {
@@ -58,6 +60,10 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     
     private Map currentMap;
     private int mapIndex;
+    	
+    private Caretaker ct = new Caretaker();
+    
+    private static boolean isFirstClient = false;
 
     public ClientGUI() 
     {

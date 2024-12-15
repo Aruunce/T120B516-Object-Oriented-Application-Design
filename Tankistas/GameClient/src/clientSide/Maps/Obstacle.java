@@ -3,17 +3,22 @@ package clientSide.Maps;
 
 import java.awt.Graphics2D;
 
-public class Obstacle {
+import clientSide.GameElement;
+import clientSide.GameElementVisitor;
+
+public class Obstacle implements GameElement {
     private int x, y;
     private int width, height;
     private int id;
     private final ObstacleImpl implementation;
     private boolean destroyed = false;
+    private int health;
 
     public Obstacle(ObstacleImpl implementation) {
         this.implementation = implementation;
         this.width = implementation.getWidth();
         this.height = implementation.getHeight();
+        this.health = 100; // Default health value
     }
 
     public void draw(Graphics2D g) {
@@ -84,5 +89,23 @@ public class Obstacle {
                 objX + objWidth > x &&
                 objY < y + height &&
                 objY + objHeight > y);
+    }
+
+    @Override
+    public void accept(GameElementVisitor visitor) {
+        visitor.visitObstacle(this);
+    }
+
+    public void decreaseHealth(int amount) {
+        if (isDestructible()) {
+            health -= amount;
+            if (health <= 0) {
+                setDestroyed(true);
+            }
+        }
+    }
+
+    public int getHealth() {
+        return health;
     }
 }

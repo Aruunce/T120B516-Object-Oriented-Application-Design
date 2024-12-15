@@ -1,26 +1,36 @@
 package clientSide;
 
 import java.io.IOException;
-/*
- * Main.java
- *
- * Created on 21, 2008, 02:10
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+import java.util.List;
+import clientSide.Maps.MapAbstractFactory;
+import clientSide.Maps.Obstacle;
+
 public class Main {
     
     /** Creates a new instance of Main */
-    public Main() 
-    {
+    public Main() {
+    }
+    
+    public static void main(String args[]) throws IOException {
+        Tank playerTank = new Tank();
+        List<Obstacle> obstacles = MapAbstractFactory.getCurrentMap().getObstacles();
+        List<PowerUp> powerUps = PowerUpGenerator.generateRandomPowerUps(5); // Generate 5 random power-ups
+
+        ClientGUI client = new ClientGUI();
+        client.setVisible(true);  // Ensure the GUI is visible
+
+        // Initialize the game loop and start the game
+        GameLoop gameLoop = new GameLoop(playerTank, obstacles, powerUps);
         
+        // Main game loop
+        while (true) {
+            gameLoop.update();
+            client.repaint();  // Repaint the GUI to reflect changes
+            try {
+                Thread.sleep(16);  // Sleep for ~16ms to achieve ~60 FPS
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
-    
-    public static void main(String args[]) throws IOException
-    {
-        ClientGUI client=new ClientGUI();
-     
-    }
-    
 }

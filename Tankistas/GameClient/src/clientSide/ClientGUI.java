@@ -60,18 +60,20 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     
     private Map currentMap;
     private int mapIndex;
-    
+    	
     private Caretaker ct = new Caretaker();
     
     private static boolean isFirstClient = false;
 
     public ClientGUI() 
     {
+        // this.powerUps = powerUps;
         score=0;
         setTitle("Multiclients Tanks Game");
         setSize(width,height);
         setLocation(60,100);
         getContentPane().setBackground(Color.BLACK);
+        
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);

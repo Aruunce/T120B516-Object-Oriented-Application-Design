@@ -1,6 +1,7 @@
 package clientSide.Memento;
 
 import clientSide.Tank;
+import clientSide.GameElementVisitor;
 import java.util.ArrayList;
 
 public class GameStateMemento {
@@ -21,5 +22,11 @@ public class GameStateMemento {
     
     public ArrayList<Tank> restore() {
         return tanks;
+    }
+
+    public void accept(GameElementVisitor visitor) {
+        for (Tank tank : tanks) {
+            tank.accept(visitor);
+        }
     }
 }

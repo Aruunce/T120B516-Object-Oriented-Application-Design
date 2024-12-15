@@ -32,7 +32,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private JTextField portText;
     private JComboBox<String> mapSelector;
     
-    private JButton registerButton;
+    public JButton registerButton;
     
     
     private JPanel registerPanel;
@@ -126,6 +126,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         registerButton.setBounds(60,130,90,25);
         registerButton.addActionListener(this);
         registerButton.setFocusable(true);
+        registerButton.setVisible(true);
         
        
         registerPanel.add(ipaddressLabel);
@@ -163,14 +164,22 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         score+=scoreParametar;
         scoreLabel.setText("Score : "+score);
     }
+
+    public GameBoardPanel getBoardPanel() {
+        return boardPanel;
+    }
+
+    public Tank getClientTank() {
+        return clientTank;
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         
         if (obj == registerButton) {
-            registerButton.setEnabled(false);
-            mapSelector.setEnabled(false);  // Disable map selection after registration
+            registerButton.setEnabled(true);
+            mapSelector.setEnabled(true);  // Disable map selection after registration
             
             try {
                 // Send selected map info to server
@@ -209,7 +218,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 }
                 
                 new ClientRecivingThread(client.getSocket()).start();
-                registerButton.setFocusable(false);
+                registerButton.setFocusable(true);
                 boardPanel.setFocusable(true);
                 
             } catch (IOException ex) {

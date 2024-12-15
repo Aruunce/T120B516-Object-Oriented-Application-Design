@@ -1,0 +1,3 @@
+Total Response Time: 6407178000 ns
+Total Operations: 12
+Throughput: 1.8728994262372607 operations/second

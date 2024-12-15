@@ -5,6 +5,7 @@ import java.awt.Image;
 public abstract class PowerUp implements GameElement {
     protected int x, y;
     protected boolean collected = false;
+    private boolean isCollected;
 
     public PowerUp(int x, int y) {
         this.x = x;
@@ -46,4 +47,10 @@ public abstract class PowerUp implements GameElement {
     public abstract void applyEffect(Tank tank);
 
     public abstract Image getImage();
+
+    public void update() {
+        if (isCollected) {
+            collected = true;
+        }
+    }
 }

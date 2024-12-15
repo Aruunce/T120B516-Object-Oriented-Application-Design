@@ -13,6 +13,7 @@ public class Obstacle implements GameElement {
     private final ObstacleImpl implementation;
     private boolean destroyed = false;
     private int health;
+    private boolean isDestroyed = false;
 
     public Obstacle(ObstacleImpl implementation) {
         this.implementation = implementation;
@@ -107,5 +108,11 @@ public class Obstacle implements GameElement {
 
     public int getHealth() {
         return health;
+    }
+
+    public void update() {
+        if (health <= 0) {
+            isDestroyed = true;
+        }
     }
 }

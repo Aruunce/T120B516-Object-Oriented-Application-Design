@@ -19,13 +19,16 @@ public class Main {
         ClientGUI client = new ClientGUI();
         client.setVisible(true);  // Ensure the GUI is visible
 
+        // Create the mediator
+        GameMediator mediator = new GameMediator(playerTank, obstacles, powerUps, client);
+
         // Initialize the game loop and start the game
-        GameLoop gameLoop = new GameLoop(playerTank, obstacles, powerUps);
+        GameLoop gameLoop = new GameLoop(mediator);
         
         // Main game loop
         while (true) {
             gameLoop.update();
-            client.repaint();  // Repaint the GUI to reflect changes
+            mediator.updateGame();  // Update the game through the mediator
             try {
                 Thread.sleep(16);  // Sleep for ~16ms to achieve ~60 FPS
             } catch (InterruptedException e) {

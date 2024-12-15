@@ -360,4 +360,8 @@ public class Tank implements GameElement, Cloneable {
     public Tank clone() throws CloneNotSupportedException {
         return (Tank) super.clone();
     }
+
+    public void update() {
+        
+    }
 }

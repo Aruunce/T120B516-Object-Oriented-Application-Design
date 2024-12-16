@@ -23,6 +23,8 @@ import clientSide.Maps.ObstacleFacade;
 import clientSide.Maps.ObstacleFactory;
 import clientSide.Maps.ObstacleType;
 
+import clientSide.Proxy.*;
+
 import clientSide.Interpreter.Console;
 import clientSide.Interpreter.Context;
 
@@ -194,6 +196,8 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
             
         client=Client.getGameClient();
         
+        //Tank realTank = new Tank();
+        //clientTank = new TankProxySecured(realTank);
         clientTank=new Tank();
         boardPanel = new GameBoardPanel(clientTank, client, false);
     

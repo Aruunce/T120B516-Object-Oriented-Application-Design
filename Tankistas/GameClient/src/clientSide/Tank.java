@@ -102,6 +102,10 @@ public class Tank implements GameElement, Cloneable {
         }
     }
 
+    public void setState(TankState state) {
+        this.state = state;
+    }
+
     public void moveLeft() {
         state.moveLeft();
     }

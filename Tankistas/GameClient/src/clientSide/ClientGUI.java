@@ -23,6 +23,9 @@ import clientSide.Maps.ObstacleFacade;
 import clientSide.Maps.ObstacleFactory;
 import clientSide.Maps.ObstacleType;
 
+import clientSide.Interpreter.Console;
+import clientSide.Interpreter.Context;
+
 import java.util.ArrayList;
 import clientSide.Memento.GameStateMemento;
 import clientSide.Memento.Caretaker;
@@ -64,6 +67,10 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
     private Caretaker ct = new Caretaker();
     
     private static boolean isFirstClient = false;
+
+    private Console console;
+    private JTextField consoleInput;
+    private JButton toggleConsoleButton;
 
     public ClientGUI() 
     {
@@ -148,6 +155,29 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         gameStateButton.addActionListener(this);
         gameStateButton.setFocusable(false);
         gameStateButton.setVisible(false);
+
+        console = new Console();
+        consoleInput = new JTextField();
+        consoleInput.setBounds(5, 150, 200, 25);
+        consoleInput.setVisible(false);
+        consoleInput.addActionListener(this);
+
+        toggleConsoleButton = new JButton("Toggle Console");
+        toggleConsoleButton.setBounds(10, 200, 120, 25);
+        toggleConsoleButton.setFocusable(false);
+        toggleConsoleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean isVisible = consoleInput.isVisible();
+                consoleInput.setVisible(!isVisible);
+                if (!isVisible) {
+                    consoleInput.requestFocus();
+                } else {
+                    boardPanel.requestFocusInWindow(); // Return focus to the main window
+                }
+            }
+        });
+        gameStatusPanel.add(toggleConsoleButton);
         
         registerPanel.add(ipaddressLabel);
         registerPanel.add(portLabel);
@@ -160,6 +190,7 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         gameStatusPanel.add(timerLabel);
         gameStatusPanel.add(livesLabel);
         gameStatusPanel.add(gameStateButton);
+        gameStatusPanel.add(consoleInput);
             
         client=Client.getGameClient();
         
@@ -253,6 +284,12 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
                 gameStateButton.setText("Pause game");
                 Client.getGameClient().sendToServer(new Protocol().ChangeGameState("Unpause"));
             }
+        }
+
+        if (obj == consoleInput) {
+            String command = consoleInput.getText();
+            console.executeCommand(command, new Context(boardPanel));
+            consoleInput.setText("");
         }
     }
 

@@ -27,7 +27,7 @@ public class Tank implements GameElement, Cloneable {
     private int width = 559, height = 473;
     private int lives = 4;
     private TankState state;
-    private int bulletDamage = 10; // Default bullet damage
+    private int bulletDamage = 1; 
 
     public Tank() {
         Map currentMap = MapAbstractFactory.getCurrentMap();
@@ -270,11 +270,11 @@ public class Tank implements GameElement, Cloneable {
         updateTankImage();
     }
 
-    public void shoot() {
-        Bullet bullet = new Bullet(posiX, posiY, direction);
-        bullet.setDamage(bulletDamage); // Set bullet damage
-        bullets.add(bullet);
-    }
+    // public void shoot() {
+    //     Bullet bullet = new Bullet(posiX, posiY, direction);
+    //     bullet.setDamage(bulletDamage); // Set bullet damage
+    //     bullets.add(bullet);
+    // }
 
     public List<Bullet> getBullets() {
         return bullets;
@@ -362,6 +362,6 @@ public class Tank implements GameElement, Cloneable {
     }
 
     public void update() {
-        
+
     }
 }

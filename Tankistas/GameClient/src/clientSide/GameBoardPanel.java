@@ -16,6 +16,8 @@ import clientSide.Maps.MapAbstractFactory;
 import clientSide.Maps.Obstacle;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import clientSide.Memento.GameStateMemento;
 
 public class GameBoardPanel extends JPanel {
@@ -26,8 +28,9 @@ public class GameBoardPanel extends JPanel {
     private static ArrayList<Obstacle> obstacles;
     private boolean gameStatus;
     private Map currentMap;
+    private List<PowerUp> powerUps;
     
-    public GameBoardPanel(Tank tank, Client client, boolean gameStatus) {
+    public GameBoardPanel(Tank tank, Client client, boolean gameStatus, List<PowerUp> powerUps) {
         // Validate tank parameter
         if (tank == null) {
             throw new IllegalArgumentException("Tank cannot be null");
@@ -35,6 +38,7 @@ public class GameBoardPanel extends JPanel {
         
         this.tank = tank;
         this.gameStatus = gameStatus;
+        this.powerUps = powerUps;
         setSize(width, height);
         setBounds(-50, 0, width, height);
         addKeyListener(new InputManager(tank));
@@ -102,6 +106,14 @@ public class GameBoardPanel extends JPanel {
                         if (bombs[j] != null && !bombs[j].stop && bombs[j].getBomBufferdImg() != null) {
                             g.drawImage(bombs[j].getBomBufferdImg(), bombs[j].getPosiX(), bombs[j].getPosiY(), this);
                         }
+                    }
+                }
+            }
+
+            if (powerUps != null) {
+                for (PowerUp powerUp : powerUps) {
+                    if (!powerUp.isCollected()) {
+                        g.drawImage(powerUp.getImage(), powerUp.getX(), powerUp.getY(), this);
                     }
                 }
             }

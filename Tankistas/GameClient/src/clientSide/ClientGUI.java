@@ -24,6 +24,8 @@ import clientSide.Maps.ObstacleFactory;
 import clientSide.Maps.ObstacleType;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import clientSide.Memento.GameStateMemento;
 import clientSide.Memento.Caretaker;
 
@@ -164,7 +166,9 @@ public class ClientGUI extends JFrame implements ActionListener,WindowListener
         client=Client.getGameClient();
         
         clientTank=new Tank();
-        boardPanel = new GameBoardPanel(clientTank, client, false);
+
+        List<PowerUp> powerUps = PowerUpGenerator.generateRandomPowerUps(5);
+        boardPanel = new GameBoardPanel(clientTank, client, false, powerUps);
     
         
         getContentPane().add(registerPanel);        
